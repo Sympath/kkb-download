@@ -3,7 +3,7 @@ node_modules
 /dist
 /Web全栈架构师033期
 /video
-
+/autoSh
 
 # local env files
 .env.local

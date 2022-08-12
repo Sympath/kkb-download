@@ -16,7 +16,6 @@
     "watch": "webpack --watch",
     "build": "webpack",
     "install-linux": "npm i && cd node_modules/puppeteer && npm i && cd ../..",
-    "auto-sh": "sh autoSh/all.sh"
   },
   "repository": {
     "type": "git",

@@ -163,6 +163,9 @@ ps -eo pid,lstart,etime,cmd |grep download.sh
 
 ![20220810220632](https://raw.githubusercontent.com/Sympath/imgs/main/20220810220632.png)
 
+
+## 脚本执行
+脚本仓库：https://github.com/Sympath/download-sh
 ## 网页端入口实现流程
 
 参考 vue-ui，实现一个 web 应用，用于生成 download 仓库并一键启动抓取动作；以下环境均是 linux
