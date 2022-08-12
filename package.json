@@ -15,7 +15,7 @@
     "once-build": "npm-run-all build1 build2 build3 build4 --continue-on-error",
     "watch": "webpack --watch",
     "build": "webpack",
-    "install-linux": "npm i && cd node_modules/puppeteer && npm i && cd ../..",
+    "install-linux": "npm i && cd node_modules/puppeteer && npm i && cd ../.."
   },
   "repository": {
     "type": "git",
