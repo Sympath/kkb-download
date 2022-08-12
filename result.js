@@ -1,0 +1,3 @@
+
+        export default {"【2023考研】马克思主义原理":[["/Users/wzyan/Documents/selfspace/ffmpeg-download/output/【2023考研】马克思主义原理/1.【马克思主义原理】/1.【先导】/【先导】.txt",["output","【2023考研】马克思主义原理","1.【马克思主义原理】","1.【先导】"]],["/Users/wzyan/Documents/selfspace/ffmpeg-download/output/【2023考研】马克思主义原理/1.【马克思主义原理】/2.【马克思主义原理】精讲/【马克思主义原理】精讲.txt",["output","【2023考研】马克思主义原理","1.【马克思主义原理】","2.【马克思主义原理】精讲"]]],"【2022考研】零达基础养成 数学二1020":[]}
+        
