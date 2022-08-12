@@ -27,4 +27,5 @@ currentConfig
 *.mp4
 *.pdf
 all.sh
+cookie.txt
 name.txt

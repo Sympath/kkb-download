@@ -1,3 +1,4 @@
+
 import path from 'path';
 // import nodeApi from '../utils/node-api.js';
 // let configObj = nodeApi.getFileExportObjInDir('/Users/wzyan/Documents/selfspace/ffmpeg-download/config/3')
@@ -10,5 +11,6 @@ for (const key of ctx.keys()) {
     modules[name] = module.default;
 }
 // 配置 2
-export const bdypDir = '' // 在百度云盘上对应的文件夹名称
+export const bdypDir = 'tangdy' // 在百度云盘上对应的文件夹名称
 export default modules
+

@@ -13,6 +13,7 @@ function filterName(name) {
   name = name.replace(/、/g, '.')
   return name.replace(reg, '')
 }
+let closeId = ''// 关闭爬虫的定时器
 // 获取课程详情路由
 let getDetailPageUrl = courseId => `https://learn.kaikeba.com/catalog/${courseId}?type=1`;
 const cookies = cjsConfig.cookies;
@@ -146,14 +147,15 @@ const cookies = cjsConfig.cookies;
               if (queryObj.accessToken) {
                 writeConfig(index, course_id, course_name, queryObj.accessToken)
                 writeFlag = false
+                // 如果30秒内没有更新配置，就关闭掉爬虫
+                clearTimeout(closeId)
+                closeId = setTimeout(async () => {
+                  let broswer = puppeteerUtils.getBroswer();
+                  await broswer.close()
+                  console.log('浏览器关闭');
+                }, 30000)
                 // 如果完成的任务数等于课程数，则将结束标识设置为true
-                if (completeConfigNum === courseList.length) {
-                  setTimeout(async () => {
-                    let broswer = puppeteerUtils.getBroswer();
-                    await broswer.close()
-                    console.log('浏览器关闭');
-                  }, 3000)
-                }
+
               }
             }
           },

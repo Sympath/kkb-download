@@ -1,4 +1,4 @@
-import URI from 'urijs';
+const URI = require("urijs");
 
 /**
  * 判断是否是微医域名
@@ -8,7 +8,6 @@ const getHostName = function (uri) {
   uri = new URI(uri);
   return uri.hostname();
 };
-
-export default {
+module.exports = {
   getHostName,
 };

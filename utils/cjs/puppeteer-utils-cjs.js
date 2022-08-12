@@ -142,18 +142,15 @@ async function login(url, cookies, props = {}) {
 }
 
 async function click(page, select) {
-  try {
-    await page.waitForSelector(select);
-    await page.$eval(select, node => {
-      if (node) {
-        node.click();
-      } else {
-        throw new Error(`${select}节点不存在`)
-      }
-    });
-  } catch (error) {
-    console.log(`点击事件触发失败，失败原因：${error}`);
-  }
+  await page.waitForSelector(select);
+  await page.$eval(select, node => {
+    if (node) {
+      node.click();
+    } else {
+      throw new Error(`${select}节点不存在`)
+    }
+  });
+
 }
 let puppeteerUtil = {
   openPage,
