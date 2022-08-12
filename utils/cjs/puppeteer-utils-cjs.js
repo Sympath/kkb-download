@@ -1,5 +1,5 @@
 let puppeteer = require("puppeteer");
-const domainUtil = require("./domain-util");
+const domainUtil = require("./domain-util-cjs");
 
 let browser;
 function getBroswer() {

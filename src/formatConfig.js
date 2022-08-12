@@ -1,10 +1,10 @@
 const { intercept, patterns } = require('puppeteer-interceptor');
 const fs = require('fs');
 const URI = require('uri-js');
-const puppeteerUtils = require("../utils/puppeteer-utils");
+const puppeteerUtils = require("../utils/cjs/puppeteer-utils-cjs");
 const cjsConfig = require("../config/cjs-index.js");
-const domainUtil = require("../utils/domain-util");
-const nodeUtil = require("../utils/node-api-cjs");
+const domainUtil = require("../utils/cjs/domain-util-cjs");
+const nodeUtil = require("../utils/cjs/node-api-cjs");
 let courseDir = 'output'; // 课程输出目录
 let configDir = 'currentConfig'; // 配置输出目录
 

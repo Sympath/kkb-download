@@ -26,6 +26,6 @@ currentConfig
 *.sw?
 *.mp4
 *.pdf
-all.sh
-cookie.txt
-name.txt
+# all.sh
+# cookie.txt
+# name.txt
