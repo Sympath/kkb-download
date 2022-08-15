@@ -4,6 +4,7 @@ node_modules
 /Web全栈架构师033期
 /video
 /download-sh
+/kkb-serve
 
 # local env files
 .env.local

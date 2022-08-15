@@ -163,9 +163,10 @@ ps -eo pid,lstart,etime,cmd |grep download.sh
 
 ![20220810220632](https://raw.githubusercontent.com/Sympath/imgs/main/20220810220632.png)
 
-
 ## 脚本执行
+
 脚本仓库：https://github.com/Sympath/download-sh
+
 ## 网页端入口实现流程
 
 参考 vue-ui，实现一个 web 应用，用于生成 download 仓库并一键启动抓取动作；以下环境均是 linux
@@ -175,3 +176,10 @@ ps -eo pid,lstart,etime,cmd |grep download.sh
 3. 启动生成配置按钮：点击执行`npm run formatConfig`
 4. 生成脚本按钮：点击执行`npm run build1 && npm run build2 && npm run build3`
 5. 开始爬取按钮：点击执行`npm run build4-linux`
+
+## 应用架构
+
+1. kkb-Web：用户端，输入 cookie 和包名，发起请求从而触发下载；其中 isDev 开启时就会触发本地的 3000 端口
+2. kkb-serve：服务端，接收请求，接收后进行下载【download-sh】仓库并输入依赖，执行课程下载流程
+3. download-sh：下载流程脚本
+4. kkb-download：核心下载模块

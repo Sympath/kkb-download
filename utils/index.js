@@ -1,4 +1,4 @@
-// import URI from "urijs";
+import URI from "urijs";
 // const URI = require("urijs");
 let utils = {};
 
@@ -7,13 +7,13 @@ let utils = {};
  * @param {String} url
  * @param {Object} query
  */
-// utils.assignQuery = (url = "", query = {}) => {
-//   let uri = new URI(url);
-//   Object.keys(query).forEach((key) => {
-//     if (uri.hasQuery(key)) uri.removeQuery(key);
-//   });
-//   return uri.addQuery(query).toString();
-// };
+let assignQuery = (url = "", query = {}) => {
+  let uri = new URI(url);
+  Object.keys(query).forEach((key) => {
+    if (uri.hasQuery(key)) uri.removeQuery(key);
+  });
+  return uri.addQuery(query).toString();
+};
 
 /**
  * 类型判断函数 传递一个要判断的类型 会返回一个函数 传要判断的值 返回是否属于之前的类型
@@ -68,5 +68,6 @@ export function filterName(name) {
 export default {
   typeCheck,
   eachObj,
-  filterName
+  filterName,
+  assignQuery
 };
