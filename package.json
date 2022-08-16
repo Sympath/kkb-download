@@ -8,7 +8,7 @@
     "build1": "node ./dist/main.js",
     "build2": "node ./dist/getFilesArr.js",
     "build3": "node ./dist/shDownLoad.js",
-    "build4-linux": "sh download.sh  1>download.log 2>download_err.log",
+    "build4-linux": "nohup ./download.sh &",
     "build4": "sh download.sh  1>download.log 2>download_err.log",
     "delete": "node ./dist/delete.js",
     "once": "npm-run-all formatConfig build1 build2 build3 build4 --continue-on-error",
