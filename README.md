@@ -183,3 +183,9 @@ ps -eo pid,lstart,etime,cmd |grep download.sh
 2. kkb-serve：服务端，接收请求，接收后进行下载【download-sh】仓库并输入依赖，执行课程下载流程（https://github.com/Sympath/download-serve）
 3. download-sh：下载流程脚本（https://github.com/Sympath/download-sh）
 4. kkb-download：核心下载模块（https://github.com/Sympath/kkb-download）
+
+## 常用命令
+查看日志
+```
+cd kkb-down/download-serve/all-kkb/baozihi426/ && cat all.log
+```
