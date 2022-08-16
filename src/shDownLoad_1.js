@@ -49,6 +49,7 @@ let getTarCmd = (dirName) => `zip -r ${dirName}.zip ${path.join(courseDir, dirNa
 let getBDYPUploadCmd = (dirName) => `bypy upload ${dirName}.zip ${bdypDir}/`
 // 生成删除资源命令
 let getRmCmd = (dirName) => `rm -rf ${dirName}`;
+let getClearLogCmd = (courseDir) => `echo '之前日志情清空,上个完成课程为${courseDir}' > all.log`;
 // 最后生成的sh脚本的位置
 let shFilePath = `${rootDir}/download.sh`;
 (async () => {
@@ -123,6 +124,7 @@ let shFilePath = `${rootDir}/download.sh`;
         // 删除压缩包
         tasks.push(getRmCmd(`${courseName}.zip`))
         tasks.push(`echo '删除压缩包完成！'`)
+        tasks.push(getClearLogCmd(courseName))
         // fs.writeFileSync(`${rootDir}/tasks.txt`, `${tasks.join('\n')}\n`, { flag: 'a+' })
         fs.writeFileSync(shFilePath, `${tasks.join('\n')}\n`, { flag: 'a+' })
     }
