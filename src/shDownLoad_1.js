@@ -44,9 +44,9 @@ async function processLineByLine(filePath) {
     //   console.log(array.length);
 }
 // 生成压缩包命令
-let getTarCmd = (dirName) => `zip -mr ${dirName}.zip ${path.join(courseDir, dirName)}`
+let getTarCmd = (dirName) => `zip -r ${dirName}.zip ${path.join(courseDir, dirName)}`
 // 生成百度云盘上传命令
-let getBDYPUploadCmd = (dirName) => `bypy upload ${dirName}.tar.gz ${bdypDir}/`
+let getBDYPUploadCmd = (dirName) => `bypy upload ${dirName}.zip ${bdypDir}/`
 // 生成删除资源命令
 let getRmCmd = (dirName) => `rm -rf ${dirName}`;
 // 最后生成的sh脚本的位置
@@ -114,7 +114,7 @@ let shFilePath = `${rootDir}/download.sh`;
             tasks.push(getBDYPUploadCmd(courseName))
         }
         // 删除资源 这一步在压缩动作里就做掉了 对应-m配置
-        // tasks.push(getRmCmd(`${courseDir}/${courseName}`))
+        tasks.push(getRmCmd(`${courseDir}/${courseName}`))
         // // 删除压缩包
         tasks.push(getRmCmd(`${courseName}.zip`))
         // fs.writeFileSync(`${rootDir}/tasks.txt`, `${tasks.join('\n')}\n`, { flag: 'a+' })

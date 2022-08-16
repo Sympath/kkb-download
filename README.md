@@ -179,7 +179,7 @@ ps -eo pid,lstart,etime,cmd |grep download.sh
 
 ## 应用架构
 
-1. kkb-Web：用户端，输入 cookie 和包名，发起请求从而触发下载；其中 isDev 开启时就会触发本地的 3000 端口
-2. kkb-serve：服务端，接收请求，接收后进行下载【download-sh】仓库并输入依赖，执行课程下载流程
-3. download-sh：下载流程脚本
-4. kkb-download：核心下载模块
+1. kkb-Web：用户端(谷歌插件)，输入 cookie 和包名，发起请求从而触发下载；其中 isDev 开启时就会触发本地的 3000 端口(https://github.com/Sympath/kkb-down-web)
+2. kkb-serve：服务端，接收请求，接收后进行下载【download-sh】仓库并输入依赖，执行课程下载流程（https://github.com/Sympath/download-serve）
+3. download-sh：下载流程脚本（https://github.com/Sympath/download-sh）
+4. kkb-download：核心下载模块（https://github.com/Sympath/kkb-download）
