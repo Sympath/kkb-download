@@ -92,6 +92,7 @@ let shFilePath = `${rootDir}/download.sh`;
                     let videoUriWithoutToken = getVideoUriWithoutToken(command)
                     if (!cacheManage[videoUriWithoutToken]) {
                         tasks.push(command)
+                        tasks.push(`echo ${handledVideoName} complete！`)
                         cacheManage[videoUriWithoutToken] = true
                     }
                     // let handleCommand = `
@@ -107,16 +108,21 @@ let shFilePath = `${rootDir}/download.sh`;
                 }
             }
         }
+        tasks.push(`echo '${courseName} 课程内视频收集完成，开始上传动作！'`)
         // 生成压缩包
         tasks.push(getTarCmd(courseName))
+        tasks.push(`echo '生成压缩包完成！'`)
         // 生成百度云盘上传命令
         if (getPlatForm().isLinux) {
             tasks.push(getBDYPUploadCmd(courseName))
         }
+        tasks.push(`echo '生成百度云盘上传命令完成！'`)
         // 删除资源 这一步在压缩动作里就做掉了 对应-m配置
         tasks.push(getRmCmd(`${courseDir}/${courseName}`))
-        // // 删除压缩包
+        tasks.push(`echo '删除资源完成！'`)
+        // 删除压缩包
         tasks.push(getRmCmd(`${courseName}.zip`))
+        tasks.push(`echo '删除压缩包完成！'`)
         // fs.writeFileSync(`${rootDir}/tasks.txt`, `${tasks.join('\n')}\n`, { flag: 'a+' })
         fs.writeFileSync(shFilePath, `${tasks.join('\n')}\n`, { flag: 'a+' })
     }
