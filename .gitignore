@@ -33,5 +33,6 @@ nohup.out
 # all.sh
 # cookie.txt
 # name.txt
+all.log
 retry.log
 retry_err.log
