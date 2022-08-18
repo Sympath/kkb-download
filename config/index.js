@@ -11,6 +11,6 @@ for (const key of ctx.keys()) {
     modules[name] = module.default;
 }
 // 配置 2
-export const bdypDir = 'tangdy' // 在百度云盘上对应的文件夹名称
+export const bdypDir = 'baozihi426' // 在百度云盘上对应的文件夹名称
 export default modules
 
