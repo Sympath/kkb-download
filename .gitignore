@@ -20,6 +20,7 @@ download_err.log
 output
 currentConfig
 # Editor directories and files
+nohup.out
 .idea
 .vscode
 *.suo
