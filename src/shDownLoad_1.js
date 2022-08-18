@@ -108,6 +108,8 @@ let shFilePath = `${rootDir}/download.sh`;
                     // return handleCommand
                 }
             }
+            // 这里代表对应的txt可以已经下载完了，将文件后缀改成.cache，避免重传时二次读取了
+            tasks.push(`mv ${txtFilePath} ${txtFilePath}.cache`)
         }
         tasks.push(`echo '${courseName} 课程内视频收集完成，开始上传动作！'`)
         // 生成压缩包
@@ -118,7 +120,7 @@ let shFilePath = `${rootDir}/download.sh`;
             tasks.push(getBDYPUploadCmd(courseName))
         }
         tasks.push(`echo '生成百度云盘上传命令完成！'`)
-        // 删除资源 这一步在压缩动作里就做掉了 对应-m配置
+        // 删除资源 
         tasks.push(getRmCmd(`${courseDir}/${courseName}`))
         tasks.push(`echo '删除资源完成！'`)
         if (getPlatForm().isLinux) {
