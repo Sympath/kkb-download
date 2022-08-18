@@ -10,7 +10,7 @@ let outDir = path.resolve(rootDir, courseDir)
 const files = fs.readdirSync(outDir)
 for (let i = 0; i < files.length; i++) {
     const courseName = files[i]
-    const stat = fs.lstatSync(dirPath + '/' + courseName)
+    const stat = fs.lstatSync(outDir + '/' + courseName)
     if (stat.isDirectory() === true) {
         let coursePath = path.resolve(outDir, courseName);
         let arr = nodeApi.loadFileNameByPath4Ext(coursePath, ['txt'], (item) => {
