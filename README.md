@@ -184,8 +184,27 @@ ps -eo pid,lstart,etime,cmd |grep download.sh
 3. download-sh：下载流程脚本（https://github.com/Sympath/download-sh）
 4. kkb-download：核心下载模块（https://github.com/Sympath/kkb-download）
 
+## 缓存
+
+在课程下载中存在失败的情况，这时就需要进行缓存，避免
+
+1. token 不同、课程名称相同时重复
+2. 下载失败得重头再来的情况，缓存处理如下
+
+shDownload_1 文件在生成 sh 脚本时
+解决问题一
+
+1. 视频维度的去重：cacheManage 以视频名称为标识，如果同一名称就不再记录
+
+解决问题二
+
+2. 小节维度的去缓存：当小节下载成功后，将对应记录命令的 txt 文件改名为 txt.cache
+3. 课程级别的去缓存：当课程下载完成后会删除 output 中的课程资源，而读取命令的 getFileArr_1.js 中如果文件不存在则不进行读取记录
+
 ## 常用命令
+
 查看日志
+
 ```
 cd kkb-down/download-serve/all-kkb/baozihi426/ && cat all.log
 ```
