@@ -5,7 +5,7 @@ import shell from 'shelljs';
 import { promisify } from 'util';
 import os from 'os';
 import utils from './index.js';
-/** 判断文件是否存在
+/** 判断文件或文件夹是否存在
  *
  * @param {*} filePath
  * @returns

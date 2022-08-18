@@ -1,7 +1,4 @@
-import {
-    loadFileNameByPath4Ext,
-    writeFileRecursive
-} from '../utils/node-api.js';
+import nodeApi from '../utils/node-api.js';
 import path from 'path';
 import fs from 'fs';
 import { exec, execSync } from 'child_process'
@@ -29,11 +26,16 @@ eachObj(configs.default, async (key, configInfo) => {
     let rootDir = __dirname.replace('/dist', '')
     debugger
     outRootDir = rootDir
-    let arr = loadFileNameByPath4Ext(path.resolve(rootDir, basePath), ['txt'], (item) => {
-        item[1].unshift(courseDir)
-        return item
-    }, [])
-    allArrObj[courseName] = arr
+    let coursePath = path.resolve(rootDir, basePath);
+    let isExit = await nodeApi.fileIsExist(coursePath)
+    // 如果目录存在才继续生成
+    if (isExit) {
+        let arr = nodeApi.loadFileNameByPath4Ext(coursePath, ['txt'], (item) => {
+            item[1].unshift(courseDir)
+            return item
+        }, [])
+        allArrObj[courseName] = arr
+    }
 })
 // 清空下载内容
 // deleteFileInDir('/Users/wzyan/Documents/selfspace/ffmpeg-download/Web前端面试涨薪名企培养计划', ['mp4'])
@@ -45,5 +47,5 @@ let content = `
         `
 // 先清空再写
 fs.unlinkSync(commandArrTxtPath)
-writeFileRecursive(commandArrTxtPath, content)
+nodeApi.writeFileRecursive(commandArrTxtPath, content)
 
