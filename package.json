@@ -10,7 +10,7 @@
     "build3": "node ./dist/shDownLoad.js",
     "build4-linux": "nohup ./download.sh > download.log 2>&1 &",
     "build4-win": "sh download.sh",
-    "retry-linux": "nohup ./retry.sh & 1>retry.log 2>&1 &",
+    "retry-linux": "nohup ./retry.sh > retry.log 2>&1 &",
     "retry-win": "sh ./retry.sh",
     "delete": "node ./dist/delete.js",
     "once": "npm-run-all formatConfig build1 build2 build3 build4 --continue-on-error",
