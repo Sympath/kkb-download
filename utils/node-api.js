@@ -267,5 +267,6 @@ export default {
   getFileExportObjInDir,
   getPlatForm,
   getPackageManageByCommand,
-  checkPath
+  checkPath,
+  loadFileNameByPath4Ext
 };
