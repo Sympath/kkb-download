@@ -4,7 +4,6 @@ import {
 } from '../utils/node-api.js';
 import path from 'path';
 import fs from 'fs';
-import * as config from '../config/index.js';
 import { exec, execSync } from 'child_process'
 import * as configs from '../config/index.js';
 import {

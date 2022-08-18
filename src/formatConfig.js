@@ -17,6 +17,11 @@ let closeId = ''// 关闭爬虫的定时器
 // 获取课程详情路由
 let getDetailPageUrl = courseId => `https://learn.kaikeba.com/catalog/${courseId}?type=1`;
 const cookies = cjsConfig.cookies;
+const courseIds = cjsConfig.courseIds; // 需要下载的课程
+const noNeedFilter = false; //是否下载全部课程
+if (courseIds.length === 0) {
+  noNeedFilter = true;
+}
 (async function () {
   let url = "https://learn.kaikeba.com/home";
   let over = ''; // 所有任务是否完成
@@ -145,7 +150,15 @@ const cookies = cjsConfig.cookies;
                 queryObj[key] = val
               })
               if (queryObj.accessToken) {
-                writeConfig(index, course_id, course_name, queryObj.accessToken)
+                // 如果是全部课程下载
+                if (noNeedFilter) {
+                  writeConfig(index, course_id, course_name, queryObj.accessToken)
+                } else {
+                  // 如果是指定课程才下载 
+                  if (courseIds.includes(course_id)) {
+                    writeConfig(index, course_id, course_name, queryObj.accessToken)
+                  }
+                }
                 writeFlag = false
                 // 如果30秒内没有更新配置，就关闭掉爬虫
                 clearTimeout(closeId)
@@ -155,7 +168,6 @@ const cookies = cjsConfig.cookies;
                   console.log('浏览器关闭');
                 }, 30000)
                 // 如果完成的任务数等于课程数，则将结束标识设置为true
-
               }
             }
           },

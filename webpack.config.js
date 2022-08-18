@@ -32,34 +32,7 @@ module.exports = {
       {
         test: /.js$/,
         use: "babel-loader",
-      },
-      {
-        test: /.css$/,
-        use: ["style-loader", "css-loader"],
-      },
-      {
-        test: /.less/,
-        use: ["style-loader", "css-loader", "less-loader"],
-      },
-      // {
-      //   test: /.jpg|jpeg|gif|png$/,
-      //   use: "file-loader",
-      // },
-      {
-        test: /.(png|jpg|gif|jpeg)$/,
-        use: [
-          {
-            loader: "url-loader",
-            options: {
-              limit: 1024000,
-            },
-          },
-        ],
-      },
-      {
-        test: /.(woff|woff2|eot|ttf|otf)$/,
-        use: "file-loader",
-      },
+      }
     ],
   },
   plugins: [

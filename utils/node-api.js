@@ -110,6 +110,7 @@ export function getFileExportObjInDir(dirPath, suffix = "js", opts = {}) {
 /** 加载指定文件夹下指定后缀的文件路径列表 （不给exts参数时则获取所有类型文件）
  * @param {*} dirPath 
  * @param {*} exts Array 文件类型数组 [mp4]
+ * @param {*} cb Function 可以在存入时对存入对象进行一层拦截处理
  * @param {*} currentDir 不用管
  * @return [[filePath, dirs = []]] 返回一个二维数组 第一个元素是文件地址；第二个是对应的子目录数组
  */
@@ -146,6 +147,42 @@ export function loadFileNameByPath4Ext(dirPath, exts, cb = (item) => item, curre
   currentDir.pop()
   return arrFiles
 }
+/** 加载指定文件夹下指定后缀的文件路径列表 （不给exts参数时则获取所有类型文件）
+ * @param {*} dirPath 
+ * @param {*} names Array 文件名数组 []
+ * @return [[filePath, dirs = []]] 返回一个二维数组 第一个元素是文件地址；第二个是对应的子目录数组
+ */
+export function loadPathByName(dirPath, names) {
+  let ignoreNames = ['node_modules']
+  function loadPathByNameCore(dirPath, names, currentDir = []) {
+    if (currentDir.length === 0) {
+      // 取最后一个目录名作为初始目录
+      currentDir = [dirPath.split('/').pop()]
+    }
+    let arrFiles = []
+    let arrFile = [];
+    // 1. 读取指定目录内的所有子文件
+    const files = fs.readdirSync(dirPath)
+    for (let i = 0; i < files.length; i++) {
+      const item = files[i]
+      // 2. 如果和指定名称匹配 则存入结果数组中
+      if (names.includes(item)) {
+        arrFile = [dirPath + '/' + item, JSON.parse(JSON.stringify(currentDir))]
+        arrFiles.push(arrFile)
+      }
+      // 3. 判断是否是文件夹，是则递归处理
+      const stat = fs.lstatSync(dirPath + '/' + item)
+      if (stat.isDirectory() === true && !ignoreNames.includes(item)) {
+        currentDir.push(item)
+        arrFiles.push(...loadPathByNameCore(dirPath + '/' + item, names, currentDir))
+      }
+    }
+    currentDir.pop()
+    return arrFiles
+  }
+  return loadPathByNameCore(dirPath, names)
+}
+
 
 /** 删除指定目录下的指定类型文件
  * @param {*} dirPath 

@@ -121,9 +121,11 @@ let shFilePath = `${rootDir}/download.sh`;
         // 删除资源 这一步在压缩动作里就做掉了 对应-m配置
         tasks.push(getRmCmd(`${courseDir}/${courseName}`))
         tasks.push(`echo '删除资源完成！'`)
-        // 删除压缩包
-        tasks.push(getRmCmd(`${courseName}.zip`))
-        tasks.push(`echo '删除压缩包完成！'`)
+        if (getPlatForm().isLinux) {
+            // 删除压缩包
+            tasks.push(getRmCmd(`${courseName}.zip`))
+            tasks.push(`echo '删除压缩包完成！'`)
+        }
         tasks.push(getClearLogCmd(courseName))
         // fs.writeFileSync(`${rootDir}/tasks.txt`, `${tasks.join('\n')}\n`, { flag: 'a+' })
         fs.writeFileSync(shFilePath, `${tasks.join('\n')}\n`, { flag: 'a+' })
