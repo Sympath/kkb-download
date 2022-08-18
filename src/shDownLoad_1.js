@@ -13,7 +13,7 @@ import {
 } from '../utils/node-api.js';
 let cacheManage = {};
 let courseDir = 'output'; // 课程输出目录
-let rootDir = __dirname.replace('/dist', '').replace('/src', '');
+let rootDir = (__dirname || "").replace('/dist', '').replace('/src', '');
 function getVideoUriWithoutToken(videoUri) {
     let videoUriWithoutTokenRege = /lhd|lud\/([0-9a-zA-Z_]{1,})\.m3u8/
     let [videoUriWithoutToken] = videoUri.match(videoUriWithoutTokenRege) || []
@@ -76,25 +76,29 @@ let shFilePath = `${rootDir}/download.sh`;
                 if (task) {
                     // 执行任务
                     let [commandPrefix, videoName] = task.split('aac_adtstoasc');
-                    let dirName = `./${dirs.join('/').replace(/\s/g, '')}/`;
-                    // 处理下生成的命令文件名
-                    let handledVideoName = videoName.replace(/\s/g, '').replace('./', dirName)
-                    if (videoNames[handledVideoName]) {
-                        videoNames[handledVideoName] = videoNames[handledVideoName] + 1
-                        handledVideoName = `${handledVideoName}-${videoNames[handledVideoName]}`
-                    } else {
-                        videoNames[handledVideoName] = 1
-                    }
-                    console.log('开始-----：', videoName)
-                    // 处理下目录问题
-                    let command = filterName(`${commandPrefix} aac_adtstoasc ${handledVideoName}`);
-                    debugger
-                    // 避免重复的命令记录
-                    let videoUriWithoutToken = getVideoUriWithoutToken(command)
-                    if (!cacheManage[videoUriWithoutToken]) {
-                        tasks.push(command)
-                        tasks.push(`echo ${handledVideoName} complete！`)
-                        cacheManage[videoUriWithoutToken] = true
+                    try {
+                        let dirName = './' + (dirs.join('/') || '').replace(/\s/g, '') + '/';
+                        // 处理下生成的命令文件名
+                        let handledVideoName = (videoName || "").replace(/\s/g, '').replace('./', dirName)
+                        if (videoNames[handledVideoName]) {
+                            videoNames[handledVideoName] = videoNames[handledVideoName] + 1
+                            handledVideoName = `${handledVideoName}-${videoNames[handledVideoName]}`
+                        } else {
+                            videoNames[handledVideoName] = 1
+                        }
+                        console.log('开始-----：', videoName)
+                        // 处理下目录问题
+                        let command = filterName(`${commandPrefix} aac_adtstoasc ${handledVideoName}`);
+                        debugger
+                        // 避免重复的命令记录
+                        let videoUriWithoutToken = getVideoUriWithoutToken(command)
+                        if (!cacheManage[videoUriWithoutToken]) {
+                            tasks.push(command)
+                            tasks.push(`echo ${handledVideoName} complete！`)
+                            cacheManage[videoUriWithoutToken] = true
+                        }
+                    } catch (error) {
+                        console.log('任务收集时的错误', error);
                     }
                     // let handleCommand = `
                     //     vai${vaiNum++}="${dirName}"
