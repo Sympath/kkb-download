@@ -11,6 +11,7 @@ let courseDir = 'output'; // 课程输出目录
 function filterName(name) {
     const reg = /[`()（）\r\n[\]]/gim
     name = name.replace(/、/g, '.')
+    name = name.replace(/ /g, '-')
     return name.replace(reg, '')
 }
 function writeConfig(index, course_id, course_name, accessToken = '') {

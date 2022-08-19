@@ -30,9 +30,11 @@ nohup.out
 *.sw?
 *.mp4
 *.pdf
+download.sh
 # all.sh
 # cookie.txt
 # name.txt
+result.js
 all.log
 retry.log
 retry_err.log

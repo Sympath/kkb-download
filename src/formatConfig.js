@@ -11,6 +11,8 @@ let configDir = 'currentConfig'; // 配置输出目录
 function filterName(name) {
   const reg = /[`()（）\r\n[\]]/gim
   name = name.replace(/、/g, '.')
+  // 处理空格
+  name = name.replace(/ /g, '-')
   return name.replace(reg, '')
 }
 let closeId = ''// 关闭爬虫的定时器
