@@ -20,7 +20,7 @@ let closeId = ''// 关闭爬虫的定时器
 let getDetailPageUrl = courseId => `https://learn.kaikeba.com/catalog/${courseId}?type=1`;
 const cookies = cjsConfig.cookies;
 const courseIds = cjsConfig.courseIds; // 需要下载的课程
-const noNeedFilter = false; //是否下载全部课程
+let noNeedFilter = false; //是否下载全部课程
 if (courseIds === '*') {
   noNeedFilter = true;
 }
