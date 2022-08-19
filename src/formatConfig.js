@@ -21,7 +21,7 @@ let getDetailPageUrl = courseId => `https://learn.kaikeba.com/catalog/${courseId
 const cookies = cjsConfig.cookies;
 const courseIds = cjsConfig.courseIds; // 需要下载的课程
 const noNeedFilter = false; //是否下载全部课程
-if (courseIds.length === 0) {
+if (courseIds === '*') {
   noNeedFilter = true;
 }
 (async function () {
