@@ -15,16 +15,18 @@
 ### 云服务器情况
 
 6. 执行`npm run build4-linux`：触发此 download.sh，挂载在后台进行下载启动
-   如果出现无权限问题，可以执行如下命令进行处理：sudo chmod -R 777 ./
+   如果出现无权限问题，可以执行如下命令进行处理：sudo chmod 777 ./
 
 ### 无云服务器情况
 
 7. 执行`npm run build4`：触发此 download.sh
-   如果出现无权限问题，可以执行如下命令进行处理：sudo chmod -R 777 ./
+   如果出现无权限问题，可以执行如下命令进行处理：sudo chmod 777 ./
 
 ## ffmpeg
 
 ### linux 下安装 ffmpeg 的详细教程
+
+- ffmpeg 开启 https 协议：https://blog.csdn.net/w839687571/article/details/99707201
 
 一、centos linux 下安装 ffmpeg
 
@@ -65,7 +67,7 @@ export PATH=$PATH:/usr/local/ffmpeg/bin
 查看是否生效
 
 ```
-source /ect/profile 设置生效
+source /etc/profile 设置生效
 ```
 
 复制
@@ -208,3 +210,8 @@ shDownload_1 文件在生成 sh 脚本时
 ```
 cd kkb-down/download-serve/all-kkb/baozihi426/ && cat all.log
 ```
+
+## 问题处理
+
+PUPPETEER_SKIP_DOWNLOAD：处理 puppeteer 安装出错问题 https://github.com/puppeteer/puppeteer/issues/6492
+npm install --ignore-scripts puppeteer
