@@ -16,6 +16,7 @@ function filterName(name) {
   return name.replace(reg, '')
 }
 let closeId = ''// 关闭爬虫的定时器
+let timeOut = 3 * 60 * 1000; // 浏览器等待响应时间 默认 3分钟
 // 获取课程详情路由
 let getDetailPageUrl = courseId => `https://learn.kaikeba.com/catalog/${courseId}?type=1`;
 const cookies = cjsConfig.cookies;
@@ -37,7 +38,7 @@ if (courseIds === '*') {
       ignoreHTTPSErrors: true,
       headless: true,
       devtools: true,
-      args: ["--no-sandbox", "--disable-setuid-sandbox"]
+      args: ["--no-sandbox", "--disable-setuid-sandbox", "--disable-extensions"]
     });
     let commonInfo = {
       Authorization: '',
@@ -167,8 +168,8 @@ if (courseIds === '*') {
                 closeId = setTimeout(async () => {
                   let broswer = puppeteerUtils.getBroswer();
                   await broswer.close()
-                  console.log('浏览器关闭');
-                }, 30000)
+                  console.log(`等待时间超过${timeOut},浏览器关闭`);
+                }, timeOut)
                 // 如果完成的任务数等于课程数，则将结束标识设置为true
               }
             }
