@@ -54,7 +54,7 @@ if (courseIds === '*') {
     export const courseName = '${filterName(course_name)}'
     export const accessToken = '${accessToken}' // 点击一个视频，进入播放状态，在控制台network 找 detail 接口，里面有accessToken  
     export const Authorization = '${Authorization}' // 列表接口 list 里面去request header 里面找  
-    export const cookie = '${cookies}'
+    export const cookie = '${JSON.stringify(cookies)}'
     // 官网上不要动页面，停留在视频播放页
     export default {
         course_id,
@@ -83,6 +83,7 @@ if (courseIds === '*') {
         // 4. 收集信息 course_id 课程名称 accessToken Authorization cookie
         // console.log(event.response.body);
         courseList = event.response.body ? JSON.parse(event.response.body).data : []
+        courseList = courseList.filter(course => course.expired_status === 1)
         // 获取到课程列表数据
         return event.response;
       }

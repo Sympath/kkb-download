@@ -15,6 +15,11 @@ for (let i = 0; i < files.length; i++) {
         let coursePath = path.resolve(outDir, courseName);
         let arr = nodeApi.loadFileNameByPath4Ext(coursePath, ['txt'], (item) => {
             item[1].unshift(courseDir)
+            if (item[0].includes('-cache')) {
+                return {
+                    exclude: true
+                }
+            }
             return item
         }, [])
         allArrObj[courseName] = arr

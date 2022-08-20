@@ -134,13 +134,25 @@ export function loadFileNameByPath4Ext(dirPath, exts, cb = (item) => item, curre
           let ext = exts[j];
           if (item.split('.').pop().toLowerCase() == ext.trim().toLowerCase()) {
             arrFile = [dirPath + '/' + item, JSON.parse(JSON.stringify(currentDir))]
-            arrFiles.push(cb(arrFile))
+            let handlerItem = cb(arrFile)
+            // 如果排除属性存在，则不做任何处理
+            if (handlerItem.exclude) {
+              
+            } else {
+              arrFiles.push(handlerItem)
+            }
             break;
           }
         }
       } else {
         arrFile = [dirPath + '/' + item, JSON.parse(JSON.stringify(currentDir))]
-        arrFiles.push(cb(arrFile))
+        let handlerItem = cb(arrFile)
+        // 如果排除属性存在，则不做任何处理
+        if (handlerItem.exclude) {
+          
+        } else {
+          arrFiles.push(handlerItem)
+        }
       }
     }
   }

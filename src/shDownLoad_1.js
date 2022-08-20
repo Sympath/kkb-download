@@ -113,7 +113,7 @@ let shFilePath = `${rootDir}/download.sh`;
                 }
             }
             // 这里代表对应的txt可以已经下载完了，将文件后缀改成.cache，避免重传时二次读取了
-            tasks.push(`mv ${txtFilePath} ${txtFilePath}.cache`)
+            tasks.push(`mv ${txtFilePath} ${txtFilePath.replace('.txt', '-cache.txt')}`)
         }
         tasks.push(`echo '${courseName} 课程内视频收集完成，开始上传动作！'`)
         // 生成压缩包
