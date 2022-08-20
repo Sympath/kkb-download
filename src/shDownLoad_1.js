@@ -55,8 +55,10 @@ let shFilePath = `${rootDir}/download.sh`;
 (async () => {
     let initContent = ''
     // 先清空掉文件内容
-    if (bdypDir) {
-        initContent = `bypy upload ${bdypDir}\n`;
+    if (getPlatForm().isLinux) {
+        if (bdypDir) {
+            initContent = `bypy upload ${bdypDir}\n`;
+        }
     }
     fs.writeFile(shFilePath, initContent, function () { console.log('清空动作 done') })
     let vaiNum = 0
@@ -88,7 +90,7 @@ let shFilePath = `${rootDir}/download.sh`;
                         }
                         console.log('开始-----：', videoName)
                         // 处理下目录问题
-                        let command = filterName(`${commandPrefix} aac_adtstoasc ${handledVideoName}`);
+                        let command = `${commandPrefix} aac_adtstoasc ${filterName(handledVideoName)}`;
                         debugger
                         // 避免重复的命令记录
                         let videoUriWithoutToken = getVideoUriWithoutToken(command)

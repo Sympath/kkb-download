@@ -9,4 +9,4 @@ npm run build
 npm run build3
 npm run build
 # 4. 执行download.sh进行重传
-npm run build4-linux
+npm run build4-mac
