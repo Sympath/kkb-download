@@ -8,6 +8,7 @@
     "build1": "node ./dist/main.js",
     "build2": "node ./dist/getFilesArr.js",
     "build3": "node ./dist/shDownLoad.js",
+    "build3-debugger": "node ./src/shDownLoad_1.js",
     "build4-linux": "sudo chmod 777 ./ && nohup sh ./download.sh 1>download.log 2>download_err.log &",
     "build4-mac": "nohup sh ./download.sh > download.log 2>&1 &",
     "build4-win": "sh download.sh",

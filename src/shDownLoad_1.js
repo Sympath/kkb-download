@@ -2,7 +2,8 @@ import ffepngTxtArrObj from '../result.js';
 import readline from 'readline'
 import fs from 'fs'
 import path from 'path'
-import { bdypDir } from '../config/index.js'
+// import { bdypDir } from '../config/index.js'
+import { bdypDir } from '../config/cjs-index.js'
 import { exec, execSync } from 'child_process'
 import {
     filterName,
@@ -15,8 +16,14 @@ let cacheManage = {};
 let courseDir = 'output'; // 课程输出目录
 let rootDir = (__dirname || "").replace('/dist', '').replace('/src', '');
 function getVideoUriWithoutToken(videoUri) {
-    let videoUriWithoutTokenRege = /lhd|lud\/([0-9a-zA-Z_]{1,})\.m3u8/
-    let [videoUriWithoutToken] = videoUri.match(videoUriWithoutTokenRege) || []
+    let videoUriWithoutTokenRege = /[lhd|lud]\/(?<videoUriWithoutToken>[0-9a-zA-Z_]{1,})\.m3u8/
+    let matchResult = videoUri.match(videoUriWithoutTokenRege);
+    let {
+        videoUriWithoutToken
+    } = matchResult.groups || {}
+    if (!videoUriWithoutToken) {
+        console.log(`${videoUri}对应的视频名称获取失败`);
+    }
     return videoUriWithoutToken
 };
 async function processLineByLine(filePath) {
