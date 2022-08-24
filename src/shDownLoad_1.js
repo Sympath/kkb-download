@@ -56,7 +56,9 @@ let getTarCmd = (dirName) => `zip -r ${dirName}.zip ${path.join(courseDir, dirNa
 let getBDYPUploadCmd = (dirName) => `bypy upload ${dirName}.zip ${bdypDir}/`
 // 生成删除资源命令
 let getRmCmd = (dirName) => `rm -rf ${dirName}`;
-let getClearLogCmd = (courseDir) => `echo '之前日志情清空,上个完成课程为${courseDir}' > all.log`;
+let getClearLogCmd = (courseDir) => `echo '之前日志情清空,上个完成课程为${courseDir}' > ../all.log`;
+let getMailCmd = (bdypDir) => `node src/mail.js --name=${bdypDir}`;
+let getMailLog = (bdypDir) => `echo '邮件通知成功：${bdypDir}`;
 // 最后生成的sh脚本的位置
 let shFilePath = `${rootDir}/download.sh`;
 (async () => {
@@ -142,6 +144,8 @@ let shFilePath = `${rootDir}/download.sh`;
             tasks.push(`echo '删除压缩包完成！'`)
         }
         tasks.push(getClearLogCmd(courseName))
+        tasks.push(getMailCmd(bdypDir))
+        tasks.push(getMailLog(bdypDir))
         // fs.writeFileSync(`${rootDir}/tasks.txt`, `${tasks.join('\n')}\n`, { flag: 'a+' })
         fs.writeFileSync(shFilePath, `${tasks.join('\n')}\n`, { flag: 'a+' })
     }
