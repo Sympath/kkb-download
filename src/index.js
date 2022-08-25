@@ -42,6 +42,7 @@ let getMailLog = (bdypDir) => `echo '邮件通知成功：${bdypDir}`;
 
 async function getFFmpeg() {
   // initShFile()
+  await clearDir(courseWrapDir)
   await clearDir(shDir)
   // 先授予可执行权限
   await doShellCmd(`chmod 777 ${shDir}`)
@@ -224,7 +225,7 @@ async function getFFmpeg() {
       }
       tasks.push(getClearLogCmd(courseName))
       tasks.push(getMailCmd(bdypDir))
-      // tasks.push(getMailLog(bdypDir))
+      tasks.push(getMailLog(bdypDir))
       // 将所有的cmd记录进sh文件
       let {
         shFilePath,
