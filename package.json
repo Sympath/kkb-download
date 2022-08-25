@@ -6,6 +6,7 @@
   "scripts": {
     "formatConfig": "node ./src/formatConfig.js",
     "mail": "node ./src/mail.js",
+    "build-all": "npm-run-all formatConfig  build build1 build-sh",
     "build1": "node ./dist/main.js",
     "build-sh": "sh ./sh/all.sh",
     "build3-debugger": "node ./src/shDownLoad_1.js",
