@@ -5,6 +5,7 @@ node_modules
 /video
 /download-sh
 /kkb-serve
+/sh
 
 # local env files
 .env.local

@@ -74,6 +74,7 @@ let shFilePath = `${rootDir}/download.sh`;
     let ffepngTxtArrs = Object.entries(ffepngTxtArrObj)
     for (let index = 0; index < ffepngTxtArrs.length; index++) {
         let [courseName, ffepngTxtArr] = ffepngTxtArrs[index]
+        tasks.push(`echo '${courseName} 课程内视频收集完成 begin~~'`)
         let tasks = [];
         for (let index = 0; index < ffepngTxtArr.length; index++) {
             const reqInfo = ffepngTxtArr[index];

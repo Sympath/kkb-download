@@ -1,4 +1,4 @@
-import nodeApi from '../utils/node-api.js';
+import nodeApi from '../../utils/node-api.js';
 import path from 'path';
 import fs from 'fs';
 let allArrObj = {

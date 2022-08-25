@@ -20,7 +20,7 @@ export const fileIsExist = async (filePath) => {
 export const clearDir = async (dirPath) => {
   // 先删后生成
   await deleteDirOrFile(dirPath)
-  checkPath(dirPath)
+  return await checkPath(dirPath)
 }
 // 删除
 export const deleteDirOrFile = async (dirPath) => {
@@ -137,7 +137,7 @@ export function loadFileNameByPath4Ext(dirPath, exts, cb = (item) => item, curre
             let handlerItem = cb(arrFile)
             // 如果排除属性存在，则不做任何处理
             if (handlerItem.exclude) {
-              
+
             } else {
               arrFiles.push(handlerItem)
             }
@@ -149,7 +149,7 @@ export function loadFileNameByPath4Ext(dirPath, exts, cb = (item) => item, curre
         let handlerItem = cb(arrFile)
         // 如果排除属性存在，则不做任何处理
         if (handlerItem.exclude) {
-          
+
         } else {
           arrFiles.push(handlerItem)
         }
@@ -270,11 +270,37 @@ export const checkPath = async function (path) {
   }
   return true
 }
+export function doShellCmd(cmd) {
+  let str = cmd;
+  let result = {};
+  return new Promise(function (resolve, reject) {
+    try {
+      cp.exec(str, function (err, stdout, stderr) {
+        if (err) {
+          console.log('err', err);
+          result.errCode = 500;
+          result.data = "操作失败！请重试";
+          reject(result);
+        } else {
+          console.log('stdout ', stdout);//标准输出
+          result.errCode = 200;
+          result.data = "操作成功！";
+          resolve(result);
+        }
+      })
+    } catch (error) {
+      throw new Error(error)
+    }
+
+  })
+}
 
 export default {
   fileIsExist,
   writeFileRecursive,
   shell,
+  clearDir,
+  doShellCmd,
   runCommand,
   getFileExportObjInDir,
   getPlatForm,
