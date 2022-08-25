@@ -17,6 +17,7 @@ axios.defaults.timeout = 30000;
 let courseWrapDir = 'output'; // 课程输出目录
 let rootDir = (__dirname || "").replace('/dist', '').replace('/src', '');
 let shDir = `${rootDir}/sh`
+let allShFilePath = `${shDir}/all.sh`
 // 获取生成的sh脚本
 let getShFilePath = async (subfix) => {
   let logDir = `${shDir}/${subfix}`
@@ -79,6 +80,7 @@ async function getFFmpeg() {
   //   }
   // ]]
   console.log('开始下载');
+  let shellTasks = [];
   for (let index = 0; index < currentConfigArrs.length; index++) {
     let tasks = [];
     const [key, configInfo] = currentConfigArrs[index];
@@ -210,7 +212,7 @@ async function getFFmpeg() {
     tasks.push(getTarCmd(courseName))
     tasks.push(`echo '生成压缩包完成！'`)
     // 生成百度云盘上传命令
-    if (getPlatForm().isLinux) {
+    if (getPlatForm().isLinux || getPlatForm().isMac) {
       tasks.push(getBDYPUploadCmd(courseName))
       tasks.push(`echo '生成百度云盘上传命令完成！'`)
     }
@@ -218,7 +220,7 @@ async function getFFmpeg() {
       // 删除资源 
       tasks.push(getRmCmd(`${courseWrapDir}/${courseName}`))
       tasks.push(`echo '删除资源完成！'`)
-      if (getPlatForm().isLinux) {
+      if (getPlatForm().isLinux || getPlatForm().isMac) {
         // 删除压缩包
         tasks.push(getRmCmd(`${courseName}.zip`))
         tasks.push(`echo '删除压缩包完成！'`)
@@ -235,10 +237,16 @@ async function getFFmpeg() {
       tasks.push(getCommonLogCmd(`脚本文件${shFilePath}生成成功 准备执行`))
       fs.writeFileSync(shFilePath, `${tasks.join('\n')}\n`, { flag: 'a+' })
       console.log(`sh脚本生成完成 ${shFilePath}`);
-      doShellCmd(`nohup sh ${shFilePath} 1>${logPath} 2>${errLogPath} &`)
+      // 考虑空间问题，不能同时执行了，先收集
+      // doShellCmd(`nohup sh ${shFilePath} 1>${logPath} 2>${errLogPath} &`)
+      shellTasks.push(`nohup sh ${shFilePath} 1>${logPath} 2>${errLogPath} &`)
     } catch (error) {
       console.log('最后环节失败了，失败原因：', error);
     }
   }
+  console.log('开始同步执行脚本 先保存到', allShFilePath);
+  fs.writeFileSync(allShFilePath, `${shellTasks.join('\n')}\n`, { flag: 'a+' })
+  // 授予可执行权限
+  await doShellCmd(`chmod 777 ${shDir}`)
 }
 getFFmpeg()

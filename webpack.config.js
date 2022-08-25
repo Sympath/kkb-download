@@ -17,10 +17,11 @@ module.exports = {
   },
   entry: {
     // formatConfig: "./src/formatConfig.js",
-    main: "./src/index.js"
+    main: "./src/index.js",
     // getFilesArr: './src/getFilesArr_1.js',
     // shDownLoad: './src/shDownLoad_1.js',
     // delete: './src/delete.js',
+    kill: './src/kill.js',
     // download: './src/download.js'
   },
   output: {

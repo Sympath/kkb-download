@@ -283,6 +283,7 @@ export function doShellCmd(cmd) {
           reject(result);
         } else {
           console.log('stdout ', stdout);//标准输出
+          result.stdout = stdout;
           result.errCode = 200;
           result.data = "操作成功！";
           resolve(result);

@@ -135,12 +135,13 @@ if (courseIds === '*') {
           course_id,
           course_name
         } = courseList[index];
+        debugger
         // 当ci
         let writeFlag = true;
         // let detailPage = puppeteerUtils.openPage(getDetailPageUrl(course_id))
         let detailPage = await puppeteerUtils.getPage({
           ignoreHTTPSErrors: true,
-          headless: false,
+          headless: true,
           args: ["--no-sandbox", "--disable-setuid-sandbox"],
           devtools: true
         });
@@ -160,17 +161,22 @@ if (courseIds === '*') {
                 } else {
                   // 如果是指定课程才下载 
                   if (courseIds.includes(course_id)) {
+                    // 写了的话就清楚掉这个id
+                    courseIds.splice(courseIds.indexOf(course_id), 1)
                     writeConfig(index, course_id, course_name, queryObj.accessToken)
                   }
                 }
                 writeFlag = false
-                // 如果30秒内没有更新配置，就关闭掉爬虫
-                clearTimeout(closeId)
-                closeId = setTimeout(async () => {
-                  let broswer = puppeteerUtils.getBroswer();
-                  await broswer.close()
-                  console.log(`等待时间超过${timeOut},浏览器关闭`);
-                }, timeOut)
+                // 全部下载、或者还存在当前需要下载的课程是才进行清除定时器动作
+                if (noNeedFilter || courseIds.length > 0) {
+                  // 如果30秒内没有更新配置，就关闭掉爬虫
+                  clearTimeout(closeId)
+                  closeId = setTimeout(async () => {
+                    let broswer = puppeteerUtils.getBroswer();
+                    await broswer.close()
+                    console.log(`等待时间超过${timeOut},浏览器关闭`);
+                  }, timeOut)
+                }
                 // 如果完成的任务数等于课程数，则将结束标识设置为true
               }
             }
