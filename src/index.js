@@ -60,7 +60,8 @@ async function getFFmpeg() {
     };
   };
   let configArrs = Object.entries(configs.default)
-  let currentConfigArrs = configArrs.slice(0, 1)
+  let currentConfigArrs = configArrs
+  // let currentConfigArrs = configArrs.slice(0, 1)
   // let currentConfigArrs = [[
   //   'config0', {
   //     accessToken:
