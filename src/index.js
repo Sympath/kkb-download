@@ -84,7 +84,7 @@ async function getFFmpeg() {
   console.log('开始下载');
   let shellTasks = [];
   try {
-    getBDYPDirCmd(bdypDir)
+    doShellCmd(getBDYPDirCmd(bdypDir))
   } catch (error) {
     console.log('创建百度云盘文件夹失败，失败原因：', error);
   }
