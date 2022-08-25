@@ -25,15 +25,17 @@ let getShFilePath = async (subfix) => {
   // 先创建一个对应的目录
   await checkPath(logDir)
   return {
-    shFilePath: `${shDir}/${subfix}.sh`,
+    shFilePath: `${logDir}/index.sh`,
     logPath: `${logDir}/normal.log`,
     errLogPath: `${logDir}/err.log`,
   }
 };
 // 生成压缩包命令
-let getTarCmd = (dirName) => `zip -r ${dirName}.zip output/${dirName})}`
+let getTarCmd = (dirName) => `zip -r ${dirName}.zip output/${dirName}`
 // 生成百度云盘上传命令
 let getBDYPUploadCmd = (dirName) => `bypy upload ${dirName}.zip ${bdypDir} /`
+// 生成百度云盘创建文件夹命令
+let getBDYPDirCmd = (dirName) => `bypy mkdir ${dirName}/`
 // 生成删除资源命令
 let getRmCmd = (dirName) => `rm -rf ${dirName}`;
 let getCommonLogCmd = (log) => `echo '${log}'`;
@@ -81,6 +83,11 @@ async function getFFmpeg() {
   // ]]
   console.log('开始下载');
   let shellTasks = [];
+  try {
+    getBDYPDirCmd(bdypDir)
+  } catch (error) {
+    console.log('创建百度云盘文件夹失败，失败原因：', error);
+  }
   for (let index = 0; index < currentConfigArrs.length; index++) {
     let tasks = [];
     const [key, configInfo] = currentConfigArrs[index];
@@ -148,6 +155,7 @@ async function getFFmpeg() {
             // const downloadTxtName = filterName(groupPath + '/' + name + '.txt').replace(/\s/g, '')
             for (let k = 0; k < contentList.length; k++) {
               // if(k) break
+              // 每节课程下面会有多个视频和多个课件，需要加后缀进行下载
               const { content: contents, content_type, content_title } = contentList[k]
               // 视频资源
               if (content_type === 3 || content_type === 7) {
@@ -155,25 +163,25 @@ async function getFFmpeg() {
                 let contentText = ''
                 for (let l = 0; l < contents.length; l++) {
                   const { callback_key: mediaId } = contents[l]
+                  // 视频名称
+                  let videoName = `${content_title}--${l < 9 ? 0 : ''}${l + 1}.mp4`
                   const params = { mediaId, accessToken }
                   try {
                     const reqData = await axios.get(mediaUrl, { ...requestConfig, params })
-                    console.log(`  请求视频：${content_title} complete！`);
+                    console.log(`  请求视频：${videoName} complete！`);
                     const { data: { data: videoInfo } } = reqData
                     const { playURL } = videoInfo.mediaMetaInfo.videoGroup[0]
                     let [videoUriWithoutToken] = playURL.split('?MtsHlsUriToken')
                     // 避免重复的课程记录
                     if (!cacheManage[videoUriWithoutToken]) {
-                      contentText += `ffmpeg -i ${playURL} -c copy -bsf:a aac_adtstoasc ${groupPath}/${content_title}--${l < 9 ? 0 : ''}${l + 1}.mp4`
-                      debugger
-                      allText += `ffmpeg -i ${playURL} -c copy -bsf:a aac_adtstoasc "${path.resolve(groupPath)}/${content_title}--${l < 9 ? 0 : ''}${l + 1}.mp4"`
+                      contentText = `ffmpeg -i ${playURL} -c copy -bsf:a aac_adtstoasc ${groupPath}/${videoName}`
                       cacheManage[videoUriWithoutToken] = true
                       // 这里是记录当前收集到的命令
                       tasks.push(contentText)
-                      tasks.push(`echo ${content_title} complete！`)
+                      tasks.push(`echo '${videoName} complete！'`)
                     }
                   } catch (error) {
-                    tasks.push(`echo 视频资源${mediaId}`)
+                    tasks.push(`echo '视频资源${mediaId}'`)
                     console.error(`视频资源${mediaId}请求失败，${error}`);
                   }
                 }
@@ -191,7 +199,7 @@ async function getFFmpeg() {
                     response.data.pipe(writer)
                   } catch (error) {
                     console.error(`课件${file}下载失败，失败原因 ${error}`);
-                    tasks.push(`课件${file}下载失败，失败原因 ${error}`)
+                    tasks.push(`echo '课件${file}下载失败，失败原因 ${error}'`)
                   }
                 }
               }
@@ -244,7 +252,7 @@ async function getFFmpeg() {
       console.log('最后环节失败了，失败原因：', error);
     }
   }
-  console.log('开始同步执行脚本 先保存到', allShFilePath);
+  console.log('执行脚本 先保存到', allShFilePath);
   fs.writeFileSync(allShFilePath, `${shellTasks.join('\n')}\n`, { flag: 'a+' })
   // 授予可执行权限
   await doShellCmd(`chmod 777 ${shDir}`)

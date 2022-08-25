@@ -6,6 +6,7 @@ node_modules
 /download-sh
 /kkb-serve
 /sh
+/currentConfig-back
 
 # local env files
 .env.local
