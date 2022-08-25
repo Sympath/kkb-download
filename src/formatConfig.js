@@ -20,7 +20,7 @@ let timeOut = 3 * 60 * 1000; // 浏览器等待响应时间 默认 3分钟
 // 获取课程详情路由
 let getDetailPageUrl = courseId => `https://learn.kaikeba.com/catalog/${courseId}?type=1`;
 const cookies = cjsConfig.cookies;
-const courseIds = cjsConfig.courseIds; // 需要下载的课程
+let courseIds = cjsConfig.courseIds; // 需要下载的课程
 let noNeedFilter = false; //是否下载全部课程
 if (courseIds === '*') {
   noNeedFilter = true;
