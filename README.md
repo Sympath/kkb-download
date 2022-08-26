@@ -213,6 +213,10 @@ shDownload_1 文件在生成 sh 脚本时
 cd kkb-down/download-serve/all-kkb/baozihi426/ && cat all.log
 ```
 
+```
+ps -ef | grep dist/main.js | grep -v grep
+```
+
 ## 问题处理
 
 PUPPETEER_SKIP_DOWNLOAD：处理 puppeteer 安装出错问题 https://github.com/puppeteer/puppeteer/issues/6492

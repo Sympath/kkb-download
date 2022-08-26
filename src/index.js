@@ -33,7 +33,7 @@ let getShFilePath = async (subfix) => {
 // 生成压缩包命令
 let getTarCmd = (dirName) => `zip -r ${dirName}.zip output/${dirName}`
 // 生成百度云盘上传命令
-let getBDYPUploadCmd = (dirName) => `bypy upload ${dirName} ${bdypDir}/`
+let getBDYPUploadCmd = (dirName, bypyDir) => `bypy upload ${dirName} ${bypyDir}/`
 let getBDYPZipUploadCmd = (dirName) => `bypy upload ${dirName}.zip ${bdypDir}/`
 // 生成百度云盘创建文件夹命令
 let getBDYPDirCmd = (dirName) => `bypy mkdir ${dirName}/`
@@ -135,8 +135,8 @@ async function getFFmpeg() {
         // 创建对应文件夹
         await checkPath(chapterPath)
         let bypyChapterPath = `${bdypDir}/${courseName}/${chapterName}`;
-        // 百度云盘：创建章目录
-        await doShellCmd(getBDYPDirCmd(bypyChapterPath))
+        // 百度云盘：创建章目录 不用创建，云盘默认会创建的
+        // await doShellCmd(getBDYPDirCmd(bypyChapterPath))
         // 2.3 拼接章对应的章详情信息接口url
         const url = chapterUrl + chapter.chapter_id;
         try {
@@ -213,7 +213,7 @@ async function getFFmpeg() {
           }
           console.log(`^_^ 章${chapterName}处理完成 ----------`);
           // 以章为维度，收集完上传、就删掉，免得占用空间
-          let uploadCmd = getBDYPUploadCmd(chapterPath, bypyChapterPath)
+          let uploadCmd = getBDYPUploadCmd(chapterPath, `${bypyChapterPath}`)
           // await doShellCmd(uploadCmd)
           tasks.push(uploadCmd)
           tasks.push(`echo '章${chapterName}资源上传！'`)
@@ -228,7 +228,7 @@ async function getFFmpeg() {
           console.error(`章${chapterName}接口请求失败，失败原因${error}`);
         }
       }
-      console.log(`^_^ 课程${courseName}}处理完成 ==========`);
+      console.log(`^_^ 课程${courseName}处理完成 ==========`);
 
     } catch (error) {
       console.error(`课程${course_id}接口请求失败，失败原因${error}`);
