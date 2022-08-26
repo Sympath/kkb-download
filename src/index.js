@@ -213,10 +213,16 @@ async function getFFmpeg() {
           }
           console.log(`^_^ 章${chapterName}处理完成 ----------`);
           // 以章为维度，收集完上传、就删掉，免得占用空间
-          tasks.push(getBDYPUploadCmd(chapterPath, bypyChapterPath))
+          let uploadCmd = getBDYPUploadCmd(chapterPath, bypyChapterPath)
+          // await doShellCmd(uploadCmd)
+          tasks.push(uploadCmd)
           tasks.push(`echo '章${chapterName}资源上传！'`)
+          console.log(`章${chapterName}资源上传命令完成`);
           // 删除资源 
-          tasks.push(getRmCmd(chapterPath))
+          let rmCmd = getRmCmd(chapterPath)
+          await doShellCmd(rmCmd)
+          console.log(`删除章${chapterName}资源完成`);
+          tasks.push(rmCmd)
           tasks.push(`echo '删除章${chapterName}资源完成！'`)
         } catch (error) {
           console.error(`章${chapterName}接口请求失败，失败原因${error}`);
@@ -227,6 +233,7 @@ async function getFFmpeg() {
     } catch (error) {
       console.error(`课程${course_id}接口请求失败，失败原因${error}`);
     }
+    console.log(`${courseName} 课程内视频收集完成`);
     tasks.push(`echo '${courseName} 课程内视频收集完成'`)
     // 生成压缩包
     // tasks.push(getTarCmd(courseName))
@@ -255,8 +262,9 @@ async function getFFmpeg() {
       fs.writeFileSync(shFilePath, `${tasks.join('\n')}\n`, { flag: 'a+' })
       console.log(`sh脚本生成完成 ${shFilePath}`);
       // 考虑空间问题，不能同时执行了，先收集
-      await doShellCmd(`nohup sh ${shFilePath} 1>${logPath} 2>${errLogPath} &`)
-      shellTasks.push(`nohup sh ${shFilePath} 1>${logPath} 2>${errLogPath} &`)
+      let doShellCmd = `nohup sh ${shFilePath} 1>${logPath} 2>${errLogPath} &`
+      shellTasks.push(doShellCmd)
+      // await doShellCmd(doShellCmd)
     } catch (error) {
       console.log('最后环节失败了，失败原因：', error);
     }
