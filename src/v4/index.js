@@ -1,4 +1,4 @@
-// 第四版：采用先下载静态资源，上传到云端；然后再直接将本地视频上传到云端 ====== 以课程为维度进行静态资源上传
+// 第四版：采用先下载静态资源，上传到云端；然后再直接将本地视频上传到云端 ===== 以章为维度进行删除上传
 import fs from 'fs'
 import path from 'path'
 import axios from 'axios'
@@ -181,24 +181,28 @@ async function getFFmpeg() {
                     let [videoUriWithoutToken] = playURL.split('?MtsHlsUriToken')
                     // 避免重复的课程记录
                     if (!cacheManage[videoUriWithoutToken]) {
-                      cacheManage[videoUriWithoutToken] = true
                       contentText = `ffmpeg -i ${playURL} -c copy -bsf:a aac_adtstoasc ${videoName}`
-                      // 这里是记录当前收集到的命令
-                      tasks.push(contentText)
-                      tasks.push(`echo '${videoName} complete！'`)
-                      let uploadCmd = getBDYPUploadCmd(videoName, `${bypyChapterPath}`)
-                      tasks.push(uploadCmd)
-                      tasks.push(`echo '课${videoName} 上传完成！✅'`)
-                      // 删除资源 
-                      let rmCmd = getRmCmd(videoName)
-                      tasks.push(rmCmd)
-                      tasks.push(`echo '删除课${videoName}完成！✅'`)
+                      cacheManage[videoUriWithoutToken] = true
+                      // // 1. 下载视频至本地 这里是记录当前收集到的命令
+                      // tasks.push(contentText)
+                      // tasks.push(`echo '${videoName} complete！'`)
+                      // // 2. 上传云盘的对应位置
+                      // let uploadCmd = getBDYPUploadCmd(videoName, groupPath)
+                      // tasks.push(uploadCmd)
+                      // tasks.push(`echo '✅^-^ ${videoName} 视频上传完成'`)
+                      // // 3. 删除本地的视频文件
+                      // let rmCmd = getRmCmd(videoName)
+                      // tasks.push(rmCmd)
+                      // tasks.push(`echo '✅ ${videoName} 本地视频删除完成'`)
+
                     }
                   } catch (error) {
                     tasks.push(`echo '视频资源${mediaId}'`)
                     console.error(`视频资源${mediaId}请求失败，${error}`);
                   }
                 }
+
+                // fs.writeFileSync(downloadTxtName, contentText, { flag: 'a+' })
               }
               // 静态资源
               if (content_type === 6) {
@@ -218,6 +222,26 @@ async function getFFmpeg() {
             }
           }
           console.log(`^_^ 章${chapterName}处理完成 ----------`);
+          // 以章为维度，收集完上传、就删掉，免得占用空间
+          // 将静态资源上传到云盘
+          let currentHandlerDirPath = chapterPath;
+          // 如果不是目录，就创建一个
+          if (!fs.isDirectory(chapterPath)) {
+            let tempDir = path.join(rootDir, './tempDir')
+            await checkPath(tempDir)
+            currentHandlerDirPath = tempDir
+          }
+          let uploadCmd = getBDYPUploadCmd(currentHandlerDirPath, `${bypyChapterPath}`)
+          await doShellCmd(uploadCmd)
+          console.log(`章${chapterName}静态资源上传完成！✅`);
+          // 删除资源 
+          let rmCmd = getRmCmd(currentHandlerDirPath)
+          await doShellCmd(rmCmd)
+          console.log(`删除章静态资源${chapterName}完成✅`);
+          // tasks.push(uploadCmd)
+          // tasks.push(`echo '章${chapterName}静态资源上传完成！✅'`)
+          // tasks.push(rmCmd)
+          // tasks.push(`echo '删除章${chapterName}资源完成！'`)
         } catch (error) {
           console.error(`章${chapterName}接口请求失败，失败原因${error}`);
         }
@@ -229,7 +253,20 @@ async function getFFmpeg() {
     }
     console.log(`${courseName} 课程内视频收集完成`);
     tasks.push(`echo '${courseName} 课程内视频收集完成'`)
+    // 生成压缩包
+    // tasks.push(getTarCmd(courseName))
+    // tasks.push(`echo '生成压缩包完成！'`)
+    // 生成百度云盘上传命令
+    // if (getPlatForm().isLinux || getPlatForm().isMac) {
+    //   tasks.push(getBDYPZipUploadCmd(courseName))
+    //   tasks.push(`echo '生成百度云盘上传命令完成！'`)
+    // }
     try {
+      // if (getPlatForm().isLinux || getPlatForm().isMac) {
+      //   // 删除压缩包
+      //   tasks.push(getRmCmd(`${courseName}.zip`))
+      //   tasks.push(`echo '删除压缩包完成！'`)
+      // }
       tasks.push(getClearLogCmd(courseName))
       tasks.push(getMailCmd(`${bdypDir}%2F${courseName}`))
       tasks.push(getMailLog(bdypDir))
@@ -247,8 +284,6 @@ async function getFFmpeg() {
       // 考虑空间问题，不能同时执行了，先收集
       let doShellCmd = `nohup sh ${shFilePath} 1>${logPath} 2>${errLogPath} &`
       shellTasks.push(doShellCmd)
-      // 放在最末尾，并注释
-      fs.writeFileSync(shFilePath, `# ${doShellCmd}\n`, { flag: 'a+' })
       // await doShellCmd(doShellCmd)
     } catch (error) {
       console.log('最后环节失败了，失败原因：', error);
@@ -258,12 +293,8 @@ async function getFFmpeg() {
   fs.writeFileSync(allShFilePath, `${shellTasks.join('\n')}\n`, { flag: 'a+' })
   // 授予可执行权限
   await doShellCmd(`chmod 777 ${shDir}`)
-  try {
-    // // 将静态资源上传到云盘
-    await doShellCmd(getBDYPUploadCmd(courseWrapDir, bdypDir))
-  } catch (error) {
-    console.log(error, '上传云盘错误');
-  }
+  // // 将静态资源上传到云盘
+  // await doShellCmd(getBDYPUploadCmd(courseWrapDir, bdypDir))
   // 这里把生成的output清空一下 避免已经上传好的静态资源占用体积
   await clearDir(courseWrapDir)
   // 最后，记得去执行生成好的sh文件
