@@ -33,7 +33,8 @@ let getShFilePath = async (subfix) => {
 // 生成压缩包命令
 let getTarCmd = (dirName) => `zip -r ${dirName}.zip output/${dirName}`
 // 生成百度云盘上传命令
-let getBDYPUploadCmd = (dirName) => `bypy upload ${dirName}.zip ${bdypDir}/`
+let getBDYPUploadCmd = (dirName) => `bypy upload ${dirName}.zip ${bdypDir} /`
+let getBDYPZipUploadCmd = (dirName) => `bypy upload ${dirName}.zip ${bdypDir} /`
 // 生成百度云盘创建文件夹命令
 let getBDYPDirCmd = (dirName) => `bypy mkdir ${dirName}/`
 // 生成删除资源命令
@@ -84,7 +85,7 @@ async function getFFmpeg() {
   console.log('开始下载');
   let shellTasks = [];
   try {
-    doShellCmd(getBDYPDirCmd(bdypDir))
+    await doShellCmd(getBDYPDirCmd(bdypDir))
   } catch (error) {
     console.log('创建百度云盘文件夹失败，失败原因：', error);
   }
@@ -99,6 +100,8 @@ async function getFFmpeg() {
       cookie,
       course_id
     } = configInfo
+    // 百度云盘：创建课程目录
+    await doShellCmd(getBDYPDirCmd(`${bdypDir}/${courseName}`))
     // 课程接口，可以获取所有章id
     const courseUrl = `https://weblearn.kaikeba.com/student/courseinfo?course_id=${course_id}&__timestamp=1653898285046`;
     // 章详情接口，可以获取章下对应所有节id
@@ -131,6 +134,9 @@ async function getFFmpeg() {
         const chapterPath = filterName(`${basePath}/${chapterName}`).replace(/\s/g, '')
         // 创建对应文件夹
         await checkPath(chapterPath)
+        let bypyChapterPath = `${bdypDir}/${courseName}/${chapterName}`;
+        // 百度云盘：创建章目录
+        await doShellCmd(getBDYPDirCmd(bypyChapterPath))
         // 2.3 拼接章对应的章详情信息接口url
         const url = chapterUrl + chapter.chapter_id;
         try {
@@ -206,6 +212,12 @@ async function getFFmpeg() {
             }
           }
           console.log(`^_^ 章${chapterName}处理完成 ----------`);
+          // 以章为维度，收集完上传、就删掉，免得占用空间
+          tasks.push(getBDYPUploadCmd(chapterPath, bypyChapterPath))
+          tasks.push(`echo '章${chapterName}资源上传！'`)
+          // 删除资源 
+          tasks.push(getRmCmd(chapterPath))
+          tasks.push(`echo '删除章${chapterName}资源完成！'`)
         } catch (error) {
           console.error(`章${chapterName}接口请求失败，失败原因${error}`);
         }
@@ -215,24 +227,21 @@ async function getFFmpeg() {
     } catch (error) {
       console.error(`课程${course_id}接口请求失败，失败原因${error}`);
     }
-    tasks.push(`echo '${courseName} 课程内视频收集完成，开始上传动作！'`)
+    tasks.push(`echo '${courseName} 课程内视频收集完成'`)
     // 生成压缩包
-    tasks.push(getTarCmd(courseName))
-    tasks.push(`echo '生成压缩包完成！'`)
+    // tasks.push(getTarCmd(courseName))
+    // tasks.push(`echo '生成压缩包完成！'`)
     // 生成百度云盘上传命令
-    if (getPlatForm().isLinux || getPlatForm().isMac) {
-      tasks.push(getBDYPUploadCmd(courseName))
-      tasks.push(`echo '生成百度云盘上传命令完成！'`)
-    }
+    // if (getPlatForm().isLinux || getPlatForm().isMac) {
+    //   tasks.push(getBDYPZipUploadCmd(courseName))
+    //   tasks.push(`echo '生成百度云盘上传命令完成！'`)
+    // }
     try {
-      // 删除资源 
-      tasks.push(getRmCmd(`${courseWrapDir}/${courseName}`))
-      tasks.push(`echo '删除资源完成！'`)
-      if (getPlatForm().isLinux || getPlatForm().isMac) {
-        // 删除压缩包
-        tasks.push(getRmCmd(`${courseName}.zip`))
-        tasks.push(`echo '删除压缩包完成！'`)
-      }
+      // if (getPlatForm().isLinux || getPlatForm().isMac) {
+      //   // 删除压缩包
+      //   tasks.push(getRmCmd(`${courseName}.zip`))
+      //   tasks.push(`echo '删除压缩包完成！'`)
+      // }
       tasks.push(getClearLogCmd(courseName))
       tasks.push(getMailCmd(bdypDir))
       tasks.push(getMailLog(bdypDir))
@@ -245,12 +254,8 @@ async function getFFmpeg() {
       tasks.push(getCommonLogCmd(`脚本文件${shFilePath}生成成功 准备执行`))
       fs.writeFileSync(shFilePath, `${tasks.join('\n')}\n`, { flag: 'a+' })
       console.log(`sh脚本生成完成 ${shFilePath}`);
-      // 考虑空间问题，不能同时执行了，先收集  ==> 试试同步执行
-      try {
-        await doShellCmd(`nohup sh ${shFilePath} 1>${logPath} 2>${errLogPath} &`)
-      } catch (error) {
-        console.log(error, '视频课程下载任务失败', shFilePath);
-      }
+      // 考虑空间问题，不能同时执行了，先收集
+      await doShellCmd(`nohup sh ${shFilePath} 1>${logPath} 2>${errLogPath} &`)
       shellTasks.push(`nohup sh ${shFilePath} 1>${logPath} 2>${errLogPath} &`)
     } catch (error) {
       console.log('最后环节失败了，失败原因：', error);
