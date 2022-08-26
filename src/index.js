@@ -245,8 +245,12 @@ async function getFFmpeg() {
       tasks.push(getCommonLogCmd(`脚本文件${shFilePath}生成成功 准备执行`))
       fs.writeFileSync(shFilePath, `${tasks.join('\n')}\n`, { flag: 'a+' })
       console.log(`sh脚本生成完成 ${shFilePath}`);
-      // 考虑空间问题，不能同时执行了，先收集
-      // doShellCmd(`nohup sh ${shFilePath} 1>${logPath} 2>${errLogPath} &`)
+      // 考虑空间问题，不能同时执行了，先收集  ==> 试试同步执行
+      try {
+        await doShellCmd(`nohup sh ${shFilePath} 1>${logPath} 2>${errLogPath} &`)
+      } catch (error) {
+        console.log(error, '视频课程下载任务失败', shFilePath);
+      }
       shellTasks.push(`nohup sh ${shFilePath} 1>${logPath} 2>${errLogPath} &`)
     } catch (error) {
       console.log('最后环节失败了，失败原因：', error);
