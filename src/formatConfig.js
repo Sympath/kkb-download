@@ -22,12 +22,17 @@ let getDetailPageUrl = courseId => `https://learn.kaikeba.com/catalog/${courseId
 const cookies = cjsConfig.cookies;
 let courseIds = cjsConfig.courseIds; // 需要下载的课程
 let noNeedFilter = false; //是否下载全部课程
-if (courseIds === '*') {
-  noNeedFilter = true;
-} else {
-  // 111,222
-  courseIds = courseIds.split(',').map(i => Number(i))
-}
+// 如果是字符串就进行处理一下
+if (typeof courseIds === 'string') {
+  if (courseIds === '*') {
+    noNeedFilter = true;
+  } else {
+    // 111,222
+    courseIds = courseIds.split(',').map(i => Number(i))
+    console.log(courseIds);
+  };
+};
+
 (async function () {
   let url = "https://learn.kaikeba.com/home";
   let over = ''; // 所有任务是否完成

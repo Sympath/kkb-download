@@ -189,11 +189,11 @@ async function getFFmpeg() {
                       // 2. 上传云盘的对应位置
                       let uploadCmd = getBDYPUploadCmd(videoName, groupPath)
                       tasks.push(uploadCmd)
-                      tasks.push(`echo '✅^-^ ${videoName} 上传完成'`)
+                      tasks.push(`echo '✅^-^ ${videoName} 视频上传完成'`)
                       // 3. 删除本地的视频文件
                       let rmCmd = getRmCmd(videoName)
                       tasks.push(rmCmd)
-                      tasks.push(`echo '✅ ${videoName} 本地文件删除完成'`)
+                      tasks.push(`echo '✅ ${videoName} 本地视频删除完成'`)
 
                     }
                   } catch (error) {
@@ -223,15 +223,16 @@ async function getFFmpeg() {
           }
           console.log(`^_^ 章${chapterName}处理完成 ----------`);
           // 以章为维度，收集完上传、就删掉，免得占用空间
-          // let uploadCmd = getBDYPUploadCmd(chapterPath, `${bypyChapterPath}`)
-          // await doShellCmd(uploadCmd)
+          // 将静态资源上传到云盘
+          let uploadCmd = getBDYPUploadCmd(chapterPath, `${bypyChapterPath}`)
+          await doShellCmd(uploadCmd)
           // tasks.push(uploadCmd)
-          // tasks.push(`echo '章${chapterName}资源上传！'`)
-          // console.log(`章${chapterName}资源上传命令收集完成`);
+          // tasks.push(`echo '章${chapterName}静态资源上传完成！✅'`)
+          console.log(`章${chapterName}静态资源上传完成！✅`);
           // 删除资源 
-          // let rmCmd = getRmCmd(chapterPath)
-          // await doShellCmd(rmCmd)
-          // console.log(`删除章${chapterName}资源命令收集完成`);
+          let rmCmd = getRmCmd(chapterPath)
+          await doShellCmd(rmCmd)
+          console.log(`删除章静态资源${chapterName}完成✅`);
           // tasks.push(rmCmd)
           // tasks.push(`echo '删除章${chapterName}资源完成！'`)
         } catch (error) {
@@ -285,8 +286,8 @@ async function getFFmpeg() {
   fs.writeFileSync(allShFilePath, `${shellTasks.join('\n')}\n`, { flag: 'a+' })
   // 授予可执行权限
   await doShellCmd(`chmod 777 ${shDir}`)
-  // 将静态资源上传到云盘
-  await doShellCmd(getBDYPUploadCmd(courseWrapDir, bdypDir))
+  // // 将静态资源上传到云盘
+  // await doShellCmd(getBDYPUploadCmd(courseWrapDir, bdypDir))
   // 这里把生成的output清空一下 避免已经上传好的静态资源占用体积
   await clearDir(courseWrapDir)
   // 最后，记得去执行生成好的sh文件
