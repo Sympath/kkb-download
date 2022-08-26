@@ -33,7 +33,7 @@ let getShFilePath = async (subfix) => {
 // 生成压缩包命令
 let getTarCmd = (dirName) => `zip -r ${dirName}.zip output/${dirName}`
 // 生成百度云盘上传命令
-let getBDYPUploadCmd = (dirName) => `bypy upload ${dirName}.zip ${bdypDir} /`
+let getBDYPUploadCmd = (dirName) => `bypy upload ${dirName}.zip ${bdypDir}/`
 // 生成百度云盘创建文件夹命令
 let getBDYPDirCmd = (dirName) => `bypy mkdir ${dirName}/`
 // 生成删除资源命令
