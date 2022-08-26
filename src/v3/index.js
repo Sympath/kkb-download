@@ -1,4 +1,3 @@
-// 第四版：采用先下载静态资源，上传到云端；然后再直接将本地视频上传到云端
 import fs from 'fs'
 import path from 'path'
 import axios from 'axios'
@@ -102,7 +101,7 @@ async function getFFmpeg() {
       course_id
     } = configInfo
     // 百度云盘：创建课程目录
-    // await doShellCmd(getBDYPDirCmd(`${bdypDir}/${courseName}`))
+    await doShellCmd(getBDYPDirCmd(`${bdypDir}/${courseName}`))
     // 课程接口，可以获取所有章id
     const courseUrl = `https://weblearn.kaikeba.com/student/courseinfo?course_id=${course_id}&__timestamp=1653898285046`;
     // 章详情接口，可以获取章下对应所有节id
@@ -181,20 +180,11 @@ async function getFFmpeg() {
                     let [videoUriWithoutToken] = playURL.split('?MtsHlsUriToken')
                     // 避免重复的课程记录
                     if (!cacheManage[videoUriWithoutToken]) {
-                      contentText = `ffmpeg -i ${playURL} -c copy -bsf:a aac_adtstoasc ${videoName}`
+                      contentText = `ffmpeg -i ${playURL} -c copy -bsf:a aac_adtstoasc ${groupPath}/${videoName}`
                       cacheManage[videoUriWithoutToken] = true
-                      // 1. 下载视频至本地 这里是记录当前收集到的命令
+                      // 这里是记录当前收集到的命令
                       tasks.push(contentText)
                       tasks.push(`echo '${videoName} complete！'`)
-                      // 2. 上传云盘的对应位置
-                      let uploadCmd = getBDYPUploadCmd(videoName, groupPath)
-                      tasks.push(uploadCmd)
-                      tasks.push(`echo '✅^-^ ${videoName} 上传完成'`)
-                      // 3. 删除本地的视频文件
-                      let rmCmd = getRmCmd(videoName)
-                      tasks.push(rmCmd)
-                      tasks.push(`echo '✅ ${videoName} 本地文件删除完成'`)
-
                     }
                   } catch (error) {
                     tasks.push(`echo '视频资源${mediaId}'`)
@@ -223,17 +213,17 @@ async function getFFmpeg() {
           }
           console.log(`^_^ 章${chapterName}处理完成 ----------`);
           // 以章为维度，收集完上传、就删掉，免得占用空间
-          // let uploadCmd = getBDYPUploadCmd(chapterPath, `${bypyChapterPath}`)
+          let uploadCmd = getBDYPUploadCmd(chapterPath, `${bypyChapterPath}`)
           // await doShellCmd(uploadCmd)
-          // tasks.push(uploadCmd)
-          // tasks.push(`echo '章${chapterName}资源上传！'`)
-          // console.log(`章${chapterName}资源上传命令收集完成`);
+          tasks.push(uploadCmd)
+          tasks.push(`echo '章${chapterName}资源上传！'`)
+          console.log(`章${chapterName}资源上传命令收集完成`);
           // 删除资源 
-          // let rmCmd = getRmCmd(chapterPath)
+          let rmCmd = getRmCmd(chapterPath)
           // await doShellCmd(rmCmd)
-          // console.log(`删除章${chapterName}资源命令收集完成`);
-          // tasks.push(rmCmd)
-          // tasks.push(`echo '删除章${chapterName}资源完成！'`)
+          console.log(`删除章${chapterName}资源命令收集完成`);
+          tasks.push(rmCmd)
+          tasks.push(`echo '删除章${chapterName}资源完成！'`)
         } catch (error) {
           console.error(`章${chapterName}接口请求失败，失败原因${error}`);
         }
@@ -268,9 +258,7 @@ async function getFFmpeg() {
         logPath,
         errLogPath
       } = await getShFilePath(key);
-      // 避免日志体积过大
-      // tasks.push(`echo '' > ${errLogPath}`)
-      // tasks.push(getCommonLogCmd(`脚本文件${shFilePath}生成成功 准备执行`))
+      tasks.push(getCommonLogCmd(`脚本文件${shFilePath}生成成功 准备执行`))
       fs.writeFileSync(shFilePath, `${tasks.join('\n')}\n`, { flag: 'a+' })
       console.log(`sh脚本生成完成 ${shFilePath}`);
       // 考虑空间问题，不能同时执行了，先收集
@@ -285,10 +273,5 @@ async function getFFmpeg() {
   fs.writeFileSync(allShFilePath, `${shellTasks.join('\n')}\n`, { flag: 'a+' })
   // 授予可执行权限
   await doShellCmd(`chmod 777 ${shDir}`)
-  // 将静态资源上传到云盘
-  await doShellCmd(getBDYPUploadCmd(courseWrapDir, bdypDir))
-  // 这里把生成的output清空一下 避免已经上传好的静态资源占用体积
-  await clearDir(courseWrapDir)
-  // 最后，记得去执行生成好的sh文件
 }
 getFFmpeg()
