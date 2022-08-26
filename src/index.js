@@ -217,11 +217,11 @@ async function getFFmpeg() {
           // await doShellCmd(uploadCmd)
           tasks.push(uploadCmd)
           tasks.push(`echo '章${chapterName}资源上传！'`)
-          console.log(`章${chapterName}资源上传命令完成`);
+          console.log(`章${chapterName}资源上传命令收集完成`);
           // 删除资源 
           let rmCmd = getRmCmd(chapterPath)
           // await doShellCmd(rmCmd)
-          console.log(`删除章${chapterName}资源完成`);
+          console.log(`删除章${chapterName}资源命令收集完成`);
           tasks.push(rmCmd)
           tasks.push(`echo '删除章${chapterName}资源完成！'`)
         } catch (error) {
