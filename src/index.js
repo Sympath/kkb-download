@@ -245,7 +245,7 @@ async function getFFmpeg() {
       // tasks.push(`echo '' > ${errLogPath}`)
       // tasks.push(getCommonLogCmd(`脚本文件${shFilePath}生成成功 准备执行`))
       // 杀死当前执行脚本的命令
-      let killShCmd = `ps -ef | grep ${bypyDir}/repo/sh/${key} | grep -v grep | awk '{print $2}' | xargs kill -9`
+      let killShCmd = `ps -ef | grep ${bdypDir}/repo/sh/${key} | grep -v grep | awk '{print $2}' | xargs kill -9`
       tasks.unshift(`# ${killShCmd}\n`)
       fs.writeFileSync(shFilePath, `${tasks.join('\n')}\n`, { flag: 'a+' })
       console.log(`sh脚本生成完成 ${shFilePath}`);
@@ -261,7 +261,7 @@ async function getFFmpeg() {
   }
   console.log('执行脚本 先保存到', allShFilePath);
   // 杀死当前用户所有执行脚本的命令
-  let killAllShCmd = `ps -ef | grep ${bypyDir}/repo/sh/config | grep -v grep | awk '{print $2}' | xargs kill -9`
+  let killAllShCmd = `ps -ef | grep ${bdypDir}/repo/sh/config | grep -v grep | awk '{print $2}' | xargs kill -9`
   shellTasks.unshift(`# ${killAllShCmd}\n`)
   // 这里需要控制一下多进程下载，对任务进行拆分
   function groupingArray(data, num) {
