@@ -58,7 +58,7 @@ let getBDYPUploadCmd = (dirName) => `bypy upload ${dirName}.zip ${bdypDir}/`
 let getRmCmd = (dirName) => `rm -rf ${dirName}`;
 let getClearLogCmd = (courseDir) => `echo '之前日志情清空,上个完成课程为${courseDir}' > ../all.log`;
 let getMailCmd = (bdypDir) => `node src/mail.js --name=${bdypDir}`;
-let getMailLog = (bdypDir) => `echo '邮件通知成功：${bdypDir}`;
+let getMailLog = (bdypDir) => `echo '邮件通知成功：${bdypDir}'`;
 // 最后生成的sh脚本的位置
 let shFilePath = `${rootDir}/download.sh`;
 (async () => {

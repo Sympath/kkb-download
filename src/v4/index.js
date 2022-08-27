@@ -43,7 +43,7 @@ let getRmCmd = (dirName) => `rm -rf ${dirName}`;
 let getCommonLogCmd = (log) => `echo '${log}'`;
 let getClearLogCmd = (courseDir) => `echo '之前日志情清空,上个完成课程为${courseDir}' > ../all.log`;
 let getMailCmd = (bdypDir) => `node src/mail.js --name=${bdypDir}`;
-let getMailLog = (bdypDir) => `echo '邮件通知成功：${bdypDir}`;
+let getMailLog = (bdypDir) => `echo '邮件通知成功：${bdypDir}'`;
 
 async function getFFmpeg() {
   // initShFile()
