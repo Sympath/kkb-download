@@ -130,7 +130,7 @@ async function getFFmpeg() {
       for (let i = 0; i < chapterList.length; i++) {
         let chapter = chapterList[i]
         // 2.1 获取章名
-        const chapterName = `${i + 1}、${chapter.chapter_name}`.replace(/\s/g, '')
+        const chapterName = filterName(`${i + 1}.${chapter.chapter_name}`.replace(/\s/g, ''))
         // 2.2 获取章相对课程的相对路径 
         const chapterPath = filterName(`${basePath}/${chapterName}`).replace(/\s/g, '')
         // 创建对应文件夹
