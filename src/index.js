@@ -23,7 +23,6 @@ let allShFilePath = `${shDir}/all.sh`
 // 获取生成的sh脚本
 let getShFilePath = async (subfix) => {
   let logDir = `${shDir}/${subfix}`
-  debugger
   // 先创建一个对应的目录
   await checkPath(logDir)
   return {
@@ -280,7 +279,7 @@ async function getFFmpeg() {
     sonShellTasks.push(renameCmd)
     // 将第一个执行的任务存放在all.sh中
     if (index === 0) {
-      fs.writeFileSync(shFilePath, `${sonShellTasks.join('\n')}\n`)
+      fs.writeFileSync(allShFilePath, `${sonShellTasks.join('\n')}\n`)
     }
     fs.writeFileSync(shFileName, `${sonShellTasks.join('\n')}\n`)
   })
