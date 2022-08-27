@@ -48,6 +48,7 @@ if (typeof courseIds === 'string') {
       devtools: true,
       args: ["--no-sandbox", "--disable-setuid-sandbox", "--disable-extensions"]
     });
+    await page.setDefaultNavigationTimeout(0);
     let commonInfo = {
       Authorization: '',
     }
