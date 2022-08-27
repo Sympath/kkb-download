@@ -7,6 +7,7 @@ node_modules
 /kkb-serve
 /sh
 /currentConfig-back
+/config
 /config/cjs-index.js
 /config/index.js
 # local env files
@@ -35,6 +36,7 @@ nohup.out
 *.pdf
 download.sh
 src/index-debug.js
+shell-tools/
 # all.sh
 # cookie.txt
 # name.txt

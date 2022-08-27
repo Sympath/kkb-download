@@ -189,7 +189,7 @@ async function getFFmpeg() {
                       tasks.push(`echo '${videoName} complete！'`)
                       let uploadCmd = getBDYPUploadCmd(videoName, `${bypyChapterPath}`)
                       tasks.push(uploadCmd)
-                      tasks.push(`echo '${bypyChapterPath}下的课${videoName} 上传完成！✅'`)
+                      tasks.push(`echo 'https://pan.baidu.com/disk/main?from=homeFlow#/index?category=all&path=%2Fapps%2Fbypy%2F${bypyChapterPath}下的课${videoName} 上传完成！✅'`)
                       // 删除资源 
                       let rmCmd = getRmCmd(videoName)
                       tasks.push(rmCmd)
