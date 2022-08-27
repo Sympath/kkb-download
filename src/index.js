@@ -242,6 +242,9 @@ async function getFFmpeg() {
       // 避免日志体积过大
       // tasks.push(`echo '' > ${errLogPath}`)
       // tasks.push(getCommonLogCmd(`脚本文件${shFilePath}生成成功 准备执行`))
+      // 杀死当前执行脚本的命令
+      let killShCmd = `ps -ef | grep ${bypyDir}/repo/sh/${key} | grep -v grep | awk '{print $2}' | xargs kill -9`
+      tasks.unshift(`# ${killShCmd}\n`)
       fs.writeFileSync(shFilePath, `${tasks.join('\n')}\n`, { flag: 'a+' })
       console.log(`sh脚本生成完成 ${shFilePath}`);
       // 考虑空间问题，不能同时执行了，先收集
@@ -255,6 +258,9 @@ async function getFFmpeg() {
     }
   }
   console.log('执行脚本 先保存到', allShFilePath);
+  // 杀死当前用户所有执行脚本的命令
+  let killAllShCmd = `ps -ef | grep ${bypyDir}/repo/sh/config | grep -v grep | awk '{print $2}' | xargs kill -9`
+  shellTasks.unshift(`# ${killAllShCmd}\n`)
   fs.writeFileSync(allShFilePath, `${shellTasks.join('\n')}\n`, { flag: 'a+' })
   // 授予可执行权限
   await doShellCmd(`chmod 777 ${shDir}`)
