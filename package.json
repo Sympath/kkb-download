@@ -9,7 +9,7 @@
     "build-all": "npm-run-all formatConfig  build build1 build-sh",
     "build1": "node ./dist/main.js",
     "all-linux": "sudo chmod 777 ./sh/all.sh && nohup sh ./sh/all.sh 1>all.log 2>all_err.log &",
-    "run-linux": "sudo chmod 777 ./run.sh && nohup sh ./run.sh 1>run.log 2>run_err.log &",
+    "run": "sudo chmod 777 ./run.sh && nohup sh ./run.sh 1>run.log 2>run_err.log &",
     "build-sh": "sh ./sh/all.sh",
     "build3-debugger": "node ./src/shDownLoad_1.js",
     "build4-linux": "sudo chmod 777 ./ && nohup sh ./download.sh 1>download.log 2>download_err.log &",
