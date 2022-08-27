@@ -18,6 +18,7 @@ axios.defaults.timeout = 30000;
 let courseWrapDir = 'output'; // 课程输出目录
 let rootDir = (__dirname || "").replace('/dist', '').replace('/src', '');
 let shDir = `${rootDir}/sh`
+let allShDir = `${shDir}/all`
 let allShFilePath = `${shDir}/all.sh`
 // 获取生成的sh脚本
 let getShFilePath = async (subfix) => {
@@ -49,6 +50,7 @@ async function getFFmpeg() {
   // initShFile()
   await clearDir(courseWrapDir)
   await clearDir(shDir)
+  await clearDir(allShDir)
   // 先授予可执行权限
   await doShellCmd(`chmod 777 ${shDir}`)
   // 记录已经下载成功了的课程
@@ -261,7 +263,27 @@ async function getFFmpeg() {
   // 杀死当前用户所有执行脚本的命令
   let killAllShCmd = `ps -ef | grep ${bypyDir}/repo/sh/config | grep -v grep | awk '{print $2}' | xargs kill -9`
   shellTasks.unshift(`# ${killAllShCmd}\n`)
-  fs.writeFileSync(allShFilePath, `${shellTasks.join('\n')}\n`, { flag: 'a+' })
+  // 这里需要控制一下多进程下载，对任务进行拆分
+  function groupingArray(data, num) {
+    let result = [];
+    for (var i = 0; i < data.length; i += num) {
+      result.push(data.slice(i, i + num));
+    }
+    return result;
+  }
+  groupingArray(shellTasks, 10).forEach((sonShellTasks, index) => {
+    // sh保存的路径
+    let shFileName = `${allShDir}/${index}.all.sh`
+    // 执行完成后就改下名字，免得无法分辨
+    let shBackFileName = `${allShDir}/all${index}-back.sh`
+    let renameCmd = `mv ${shFileName} ${shBackFileName}\n`
+    sonShellTasks.push(renameCmd)
+    // 将第一个执行的任务存放在all.sh中
+    if (index === 0) {
+      fs.writeFileSync(shFilePath, `${sonShellTasks.join('\n')}\n`)
+    }
+    fs.writeFileSync(shFileName, `${sonShellTasks.join('\n')}\n`)
+  })
   // 授予可执行权限
   await doShellCmd(`chmod 777 ${shDir}`)
   try {
