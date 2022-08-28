@@ -1,7 +1,8 @@
 const nodemailer = require("nodemailer");
 const args = require('minimist')(process.argv.slice(2))
 let userName = args['name'];
-let userLink = https = `https://pan.baidu.com/disk/main?from=homeFlow#/index?category=all&path=%2Fapps%2Fbypy%2F${userName}`
+let courseName = args['courseName'];
+let userLink = https = `https://pan.baidu.com/disk/main?from=homeFlow#/index?category=all&path=%2Fapps%2Fbypy%2F${userName}%2F${courseName}`
 let transporter = nodemailer.createTransport({
   service: "qq",
   port: 465, // SMTP端口 发邮件的端口

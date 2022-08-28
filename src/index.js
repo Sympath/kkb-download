@@ -42,7 +42,7 @@ let getBDYPDirCmd = (dirName) => `bypy mkdir ${dirName}/`
 let getRmCmd = (dirName) => `rm -rf ${dirName}`;
 let getCommonLogCmd = (log) => `echo '${log}'`;
 let getClearLogCmd = (courseDir) => `echo '之前日志情清空,上个完成课程为${courseDir}' > ../all.log`;
-let getMailCmd = (bdypDir) => `node src/mail.js --name=${bdypDir}`;
+let getMailCmd = (bdypDir, courseName) => `node src/mail.js --name=${bdypDir} --courseName=${courseName}`;
 let getMailLog = (bdypDir) => `echo '邮件通知成功：${bdypDir}'`;
 
 async function getFFmpeg() {
@@ -232,7 +232,7 @@ async function getFFmpeg() {
     tasks.push(`echo '${courseName} 课程内视频收集完成'`)
     try {
       tasks.push(getClearLogCmd(courseName))
-      tasks.push(getMailCmd(`${bdypDir}%2F${courseName}`))
+      tasks.push(getMailCmd(bdypDir, courseName))
       tasks.push(getMailLog(bdypDir))
       // 将所有的cmd记录进sh文件
       let {
