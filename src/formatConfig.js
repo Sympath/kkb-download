@@ -144,7 +144,7 @@ if (typeof courseIds === 'string') {
           course_id,
           course_name
         } = courseList[index];
-        debugger
+
         // 当ci
         let writeFlag = true;
         // let detailPage = puppeteerUtils.openPage(getDetailPageUrl(course_id))

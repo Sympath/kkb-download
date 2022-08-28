@@ -101,7 +101,7 @@ let shFilePath = `${rootDir}/download.sh`;
                         console.log('开始-----：', videoName)
                         // 处理下目录问题
                         let command = `${commandPrefix} aac_adtstoasc ${filterName(handledVideoName)}`;
-                        debugger
+
                         // 避免重复的命令记录
                         let videoUriWithoutToken = getVideoUriWithoutToken(command)
                         if (!cacheManage[videoUriWithoutToken]) {
@@ -150,7 +150,7 @@ let shFilePath = `${rootDir}/download.sh`;
         // fs.writeFileSync(`${rootDir}/tasks.txt`, `${tasks.join('\n')}\n`, { flag: 'a+' })
         fs.writeFileSync(shFilePath, `${tasks.join('\n')}\n`, { flag: 'a+' })
     }
-    // debugger
+    // 
     // if (getPlatForm().isLinux) {
     //     exec(`nohup sh ${shFilePath} &`)
     // } else {

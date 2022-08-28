@@ -10,7 +10,7 @@ TreeWrap.prototype.addNode = function (node = null, fNode = "") {
   // 获取节点结构 避免传递的是一个值
   let handledNode = this.formatNode(node);
   let handledFNode = this.formatNode(fNode);
-  debugger;
+  ;
   let nodeId = handledNode.id;
   let fNodeId = handledFNode.id;
   // 1.1 如果父节点不在，就将父节点挂载在最外层

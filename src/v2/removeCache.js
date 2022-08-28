@@ -27,7 +27,7 @@ if (!Object.entries) {
         for (let index = 0; index < ffepngTxtArr.length; index++) {
             const reqInfo = ffepngTxtArr[index];
             let [txtFilePath, dirs] = reqInfo
-            debugger
+
             await nodeApi.doShellCmd(`mv ${txtFilePath} ${txtFilePath.replace('-cache.txt', '.txt')}`)
         }
     }

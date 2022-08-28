@@ -58,7 +58,7 @@ let cacheManage = {
   const txtFilePath = path.resolve(rootDir, './tasks.txt')
   // txt文件内包含的所有命令
   let tasks = await processLineByLine(txtFilePath);
-  debugger
+
   tasks = tasks.filter(req => req)
   for (let index = 0; index < tasks.length; index++) {
     const task = tasks[index];
