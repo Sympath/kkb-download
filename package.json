@@ -24,6 +24,7 @@
     "once-build": "npm-run-all build1 build2 build3 build4 --continue-on-error",
     "watch": "webpack --watch",
     "build": "webpack",
+    "download-single": "node src/download-single.js",
     "install-linux": "npm install --ignore-scripts puppeteer && npm i && cd node_modules/puppeteer && npm run install && npm run install && cd ../.."
   },
   "repository": {
@@ -35,10 +36,12 @@
   "license": "ISC",
   "dependencies": {
     "axios": "^0.27.2",
+    "fluent-ffmpeg": "^2.1.2",
     "glob": "^8.0.3",
     "minimist": "^1.2.6",
     "npm-run-all": "^4.1.5",
-    "shelljs": "^0.8.5"
+    "shelljs": "^0.8.5",
+    "single-line-log": "^1.1.2"
   },
   "bugs": {
     "url": "https://github.com/amebyte/ffmpeg-download/issues"

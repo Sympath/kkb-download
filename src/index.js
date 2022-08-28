@@ -136,7 +136,6 @@ async function getFFmpeg() {
         const chapterPath = filterName(`${basePath}/${chapterName}`).replace(/\s/g, '')
         // 创建对应文件夹
         await checkPath(chapterPath)
-        let bypyChapterPath = `${bdypDir}/${courseName}/${chapterName}`;
         // 百度云盘：创建章目录 不用创建，云盘默认会创建的
         // await doShellCmd(getBDYPDirCmd(bypyChapterPath))
         // 2.3 拼接章对应的章详情信息接口url
@@ -154,6 +153,8 @@ async function getFFmpeg() {
             const groupName = `${j + 1}、${name}`.replace(/\s/g, '')
             // 3.2 小节相对路径
             const groupPath = filterName(`${chapterPath}/${groupName}`).replace(/\s/g, '')
+            // 云盘上传地址
+            let bypyChapterPath = `${bdypDir}/${groupPath}`;
             await checkPath(groupPath)
 
             const contentList = groupInfo.content_list

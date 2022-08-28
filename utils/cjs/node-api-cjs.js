@@ -2,6 +2,7 @@
 const fs = require('fs');
 const path = require('path');
 const shell = require('shelljs');
+const cp = require('child_process');
 const checkPath = async function (path) {
   try {
     await fs.promises.access(path)
@@ -15,6 +16,31 @@ const clearDir = async (dirPath) => {
   // 先删后生成
   await deleteDirOrFile(dirPath)
   checkPath(dirPath)
+}
+function doShellCmd(cmd) {
+  let str = cmd;
+  let result = {};
+  return new Promise(function (resolve, reject) {
+    try {
+      cp.exec(str, function (err, stdout, stderr) {
+        if (err) {
+          console.log('err', err);
+          result.errCode = 500;
+          result.data = "操作失败！请重试";
+          reject(result);
+        } else {
+          console.log('stdout ', stdout);//标准输出
+          result.stdout = stdout;
+          result.errCode = 200;
+          result.data = "操作成功！";
+          resolve(result);
+        }
+      })
+    } catch (error) {
+      throw new Error(error)
+    }
+
+  })
 }
 // 删除
 const deleteDirOrFile = async (dirPath) => {
@@ -38,6 +64,7 @@ const writeFileRecursive = function (path, buffer) {
 };
 module.exports = {
   clearDir,
+  doShellCmd,
   deleteDirOrFile,
   writeFileRecursive
 }
