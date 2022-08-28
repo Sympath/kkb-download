@@ -1,4 +1,4 @@
-// 用于下载单个视频，只要去修改config/download-single即可
+// 用于下载单个视频，只要去修改config/single-download即可
 const fs = require("fs");
 const path = require("path");
 const {
@@ -6,7 +6,7 @@ const {
     courseName, // 视频名称
     bypyFullDir, // 云盘地址
     bypyDir, // 用户名
-} = require('../config/download-single.js');
+} = require('../config/single-download.js');
 const { doShellCmd } = require("../utils/cjs/node-api-cjs.js");
 const { filterName } = require("../utils/cjs/index.js");
 const m3u8ToMp4 = require("./m3u8ToMp4.js"); // 引入核心模块，注意路径

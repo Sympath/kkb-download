@@ -24,8 +24,9 @@
     "once-build": "npm-run-all build1 build2 build3 build4 --continue-on-error",
     "watch": "webpack --watch",
     "build": "webpack",
-    "download-single": "node src/download-single.js",
-    "install-linux": "npm install --ignore-scripts puppeteer && npm i && cd node_modules/puppeteer && npm run install && npm run install && cd ../.."
+    "install-linux": "npm install --ignore-scripts puppeteer && npm i && cd node_modules/puppeteer && npm run install && npm run install && cd ../..",
+    "single-download": "node src/single-download.js",
+    "single-download-sh": "sudo chmod 777 single-download.sh && nohup sh ./single-download.sh 1>single-download.log 2>single-download_err.log &"
   },
   "repository": {
     "type": "git",
