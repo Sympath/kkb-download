@@ -117,7 +117,7 @@ async function getFFmpeg() {
             // 3.2 小节相对路径
             const groupPath = filterName(`${chapterPath}/${groupName}`).replace(/\s/g, '')
             // 云盘上传地址
-            let bypyChapterPath = filterName(`${bdypDir}/${chapterName}/${groupName}`).replace(/\s/g, '');
+            let bypyChapterPath = filterName(`${bdypDir}/${courseName}/${chapterName}/${groupName}`).replace(/\s/g, '');
             await checkPath(groupPath)
 
             const contentList = groupInfo.content_list
@@ -153,7 +153,7 @@ async function getFFmpeg() {
                       tasks.push(`echo '${videoName} complete！'`)
                       let uploadCmd = getBDYPUploadCmd(videoName, `${bypyChapterPath}`)
                       tasks.push(uploadCmd)
-                      tasks.push(`echo '${bdypHost}/${bypyChapterPath}下的课${videoName} 上传完成！✅'`)
+                      tasks.push(`echo '【${bdypHost}/${bypyChapterPath}】 下的课 ${videoName}  上传完成！✅'`)
                       // 删除资源 
                       let rmCmd = getRmCmd(videoName)
                       tasks.push(rmCmd)
