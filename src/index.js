@@ -97,7 +97,7 @@ async function getFFmpeg() {
         // 2.1 获取章名
         const chapterName = filterName(`${i + 1}.${chapter.chapter_name}`.replace(/\s/g, ''))
         // 2.2 获取章相对课程的相对路径 
-        const chapterPath = filterName(`${basePath}/${chapterName}`).replace(/\s/g, '')
+        const chapterPath = filterName(`${bdypDir}/${chapterName}`).replace(/\s/g, '')
         // 创建对应文件夹
         await checkPath(chapterPath)
         // 百度云盘：创建章目录 不用创建，云盘默认会创建的
