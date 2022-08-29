@@ -7,7 +7,9 @@ node_modules
 /kkb-serve
 /sh
 /currentConfig-back
-/config
+/config/mock-configArr.js
+/config/single-download-config
+/config/single-download.js
 /config/cjs-index.js
 /config/index.js
 # local env files

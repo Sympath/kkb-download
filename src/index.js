@@ -14,16 +14,21 @@ import {
   filterName,
   eachObj
 } from '../utils/index.js';
+import {
+  bdypHost,
+  getBDYPUploadCmd,
+  getBDYPLink,
+  getBDYPDirCmd
+} from '../utils/bypy-util.js';
+import {
+  courseWrapDir,
+  shDir,
+  finishCourseTxtPath,
+  allShDir,
+  allShFilePath
+} from '../config/vari.js';
 import { checkPath, clearDir } from '../utils/node-api.js';
 
-let courseWrapDir = 'output'; // 课程输出目录
-let rootDir = (__dirname || "").replace('/dist', '').replace('/src', '');
-let shDir = `${rootDir}/sh`
-// 已完成的课程记录
-let finishCourseTxtPath = `${rootDir}/sh/finishCourse.txt`
-let allShDir = `${shDir}/all`
-let allShFilePath = `${shDir}/all.sh`
-let bdypHost = 'https://pan.baidu.com/disk/main?from=homeFlow#/index?category=all&path=%2Fapps%2Fbypy%2F'
 // 获取生成的sh脚本
 let getShFilePath = async (subfix) => {
   let logDir = `${shDir}/${subfix}`
@@ -35,15 +40,6 @@ let getShFilePath = async (subfix) => {
     errLogPath: `${logDir}/err.log`,
   }
 };
-// 生成压缩包命令
-let getTarCmd = (dirName) => `zip -r ${dirName}.zip output/${dirName}`
-// 生成百度云盘上传命令
-let getBDYPUploadCmd = (dirName, bypyDir) => `bypy upload ${dirName} ${bypyDir}/`
-// 获取课程对应的访问链接
-let getBDYPLink = (userName, courseName) => `${bdypHost}${userName}%2F${courseName}`
-let getBDYPZipUploadCmd = (dirName) => `bypy upload ${dirName}.zip ${bdypDir}/`
-// 生成百度云盘创建文件夹命令
-let getBDYPDirCmd = (dirName) => `bypy mkdir ${dirName}/`
 // 生成删除资源命令
 let getRmCmd = (dirName) => `rm -rf ${dirName}`;
 let getCommonLogCmd = (log) => `echo '${log}'`;
