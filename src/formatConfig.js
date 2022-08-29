@@ -63,7 +63,7 @@ if (typeof courseIds === 'string') {
     export const courseName = '${filterName(course_name)}'
     export const accessToken = '${accessToken}' // 点击一个视频，进入播放状态，在控制台network 找 detail 接口，里面有accessToken  
     export const Authorization = '${Authorization}' // 列表接口 list 里面去request header 里面找  
-    export const cookie = '${JSON.stringify(cookies)}'
+    export const cookie = ${JSON.stringify(cookies)}
     // 官网上不要动页面，停留在视频播放页
     export default {
         course_id,
