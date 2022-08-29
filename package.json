@@ -12,6 +12,7 @@
     "build1": "node ./dist/main.js",
     "build-sh": "sudo chmod 777 ./sh/all.sh && nohup sh ./sh/all.sh 1>all.log 2>all_err.log &",
     "run": "sudo chmod 777 ./shell-tools/run.sh && nohup sh ./shell-tools/run.sh 1>./shell-tools/shell-logs/run.log 2>./shell-tools/shell-logs/run_err.log &",
+    "all": "sudo chmod 777 ./shell-tools/all.sh && nohup sh ./shell-tools/all.sh 1>./shell-tools/shell-logs/all.log 2>./shell-tools/shell-logs/all_err.log &",
     "retry-linux": "sudo chmod 777 ./shell-tools/retry.sh && nohup sh ./shell-tools/retry.sh 1>./shell-tools/shell-logs/retry.log 2>./shell-tools/shell-logs/retry_err.log &",
     "install-linux": "npm install --ignore-scripts puppeteer && npm i && cd node_modules/puppeteer && npm run install && npm run install && cd ../..",
     "single-download": "node src/single-download.js",
