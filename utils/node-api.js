@@ -16,11 +16,21 @@ export const fileIsExist = async (filePath) => {
     .then(() => true)
     .catch((_) => false);
 };
-// 清空目录
-export const clearDir = async (dirPath) => {
-  // 先删后生成
-  await deleteDirOrFile(dirPath)
-  return await checkPath(dirPath)
+/** 清空目录
+ * 
+ * @param  {...any} dirPaths 支持传入多个路径进行批量处理
+ */
+export const clearDir = async (...dirPaths) => {
+  for (let index = 0; index < dirPaths.length; index++) {
+    const dirPath = dirPaths[index];
+    try {
+      await deleteDirOrFile(dirPath)
+      // 先删后生成
+      await checkPath(dirPath)
+    } catch (error) {
+      console.log(`clearDir error ：${dirPath}`);
+    }
+  }
 }
 // 删除
 export const deleteDirOrFile = async (dirPath) => {

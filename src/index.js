@@ -1,18 +1,14 @@
 // 第四版：采用先下载静态资源，上传到云端；然后再直接将本地视频上传到云端 ====== 以课程为维度进行静态资源上传
-import fs from 'fs'
-import path from 'path'
-import readline from 'readline'
+import * as fs from 'fs'
 import {
   getPlatForm,
   doShellCmd
 } from '../utils/node-api.js';
-import * as api from '../api/index.js';
+import * as api from './api/index.js';
 import * as configs from '../config/index.js';
-import * as mockConfigArr from '../config/mock-configArr';
 import { bdypDir } from '../config/cjs-index.js'
 import {
-  filterName,
-  eachObj
+  filterName
 } from '../utils/index.js';
 import {
   bdypHost,
@@ -20,6 +16,7 @@ import {
   getBDYPLink,
   getBDYPDirCmd
 } from '../utils/bypy-util.js';
+import polify from '../utils/polify.js';
 import {
   courseWrapDir,
   shDir,
@@ -51,31 +48,19 @@ let recordFinishCourse = (courseName, owner, link) => {
   let record = `${courseName}======${owner}======${link}`
   return `echo ${record} >> ${finishCourseTxtPath}`
 }
-
+// 处理一些特性实现问题
+polify();
 async function getFFmpeg() {
   // initShFile()
-  await clearDir(courseWrapDir)
-  await clearDir(shDir)
-  await clearDir(allShDir)
+  // 清空一些相关目录
+  await clearDir(courseWrapDir, shDir, allShDir)
   // 先授予可执行权限
   await doShellCmd(`chmod 777 ${shDir}`)
   // 记录已经下载成功了的课程
   let cacheManage = {
   };
-  if (!Object.entries) {
-    Object.entries = function (obj) {
-      var ownProps = Object.keys(obj),
-        i = ownProps.length,
-        resArray = new Array(i); // preallocate the Array
-
-      while (i--)
-        resArray[i] = [ownProps[i], obj[ownProps[i]]];
-      return resArray;
-    };
-  };
   let configArrs = Object.entries(configs.default)
   let currentConfigArrs = configArrs
-  // let currentConfigArrs = mockConfigArr 需要debugger的时候 用这个
 
   console.log('开始下载');
   let shellTasks = [];
@@ -95,14 +80,6 @@ async function getFFmpeg() {
       cookie,
       course_id
     } = configInfo
-    // 百度云盘：创建课程目录
-    // await doShellCmd(getBDYPDirCmd(`${bdypDir}/${courseName}`))
-    // 课程接口，可以获取所有章id
-    const courseUrl = `https://weblearn.kaikeba.com/student/courseinfo?course_id=${course_id}&__timestamp=1653898285046`;
-    // 章详情接口，可以获取章下对应所有节id
-    const chapterUrl = `https://weblearn.kaikeba.com/student/chapterinfo?course_id=${course_id}&chapter_id=`;
-    // 节详情，可以获取节下所有对应课程视频地址
-    const mediaUrl = 'https://api-vod.baoshiyun.com/vod/v1/platform/media/detail'
     await checkPath(basePath)
     console.log(`${basePath} 生成对应根目录完成 ===== 对应配置文件为 ${key}`);
     // 请求的基础信息要先初始化好
@@ -110,12 +87,11 @@ async function getFFmpeg() {
     // 请求内容
     try {
       // 1. 拼接章对应的课信息接口url，请求
-      const { data: { data: courseInfo } } = await api.kkb.getCourseInfo(course_id);
+      const { data: courseInfo } = await api.kkb.getCourseInfo(course_id);
       console.log(`一、请求课程${courseName} 对应的章信息成功 =========`);
       const chapterList = courseInfo.chapter_list
       // 课程的结构：课-章-节-课程视频列表 
       // 2. 获取章列表
-      let allText = ''
       for (let i = 0; i < chapterList.length; i++) {
         let chapter = chapterList[i]
         // 2.1 获取章名
@@ -129,7 +105,7 @@ async function getFFmpeg() {
         // 2.3 拼接章对应的章详情信息接口url
         try {
           // 2.4 获取章详情
-          const { data: { data: chapterInfo } } = await api.kkb.getChapterInfo(course_id, chapter.chapter_id)
+          const { data: chapterInfo } = await api.kkb.getChapterInfo(course_id, chapter.chapter_id)
           console.log(`二、请求章${chapterName}详情信息成功 ----------`);
           // 3 处理章下对应小节信息
           const sectionList = chapterInfo.section_list
@@ -163,9 +139,9 @@ async function getFFmpeg() {
                   let videoName = `${content_title}--${l < 9 ? 0 : ''}${l + 1}.mp4`
                   const params = { mediaId, accessToken }
                   try {
-                    const reqData = await api.kkb.getMediaInfo(params)
+                    const { data: videoInfo } = await api.kkb.getMediaInfo(params)
                     console.log(`  请求视频：${videoName} complete！`);
-                    const { data: { data: videoInfo } } = reqData
+                    debugger
                     const { playURL } = videoInfo.mediaMetaInfo.videoGroup[0]
                     let [videoUriWithoutToken] = playURL.split('?MtsHlsUriToken')
                     // 避免重复的课程记录

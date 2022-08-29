@@ -1,7 +1,6 @@
 .DS_Store
 node_modules
 /dist
-/Web全栈架构师033期
 /video
 /download-sh
 /kkb-serve
@@ -12,6 +11,8 @@ node_modules
 /config/single-download.js
 /config/cjs-index.js
 /config/index.js
+output
+currentConfig
 # local env files
 .env.local
 .env.*.local
@@ -21,10 +22,7 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
-download.log
-download_err.log
-output
-currentConfig
+*.log
 # Editor directories and files
 nohup.out
 .idea
@@ -38,7 +36,8 @@ nohup.out
 *.pdf
 download.sh
 src/index-debug.js
-shell-tools/
+shell-tools/upload-remote.sh
+shell-tools/upload.sh
 # all.sh
 # cookie.txt
 # name.txt
