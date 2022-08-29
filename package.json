@@ -11,11 +11,11 @@
     "mail": "node ./src/mail.js",
     "build1": "node ./dist/main.js",
     "build-sh": "sudo chmod 777 ./sh/all.sh && nohup sh ./sh/all.sh 1>all.log 2>all_err.log &",
-    "run": "sudo chmod 777 ./shell-tools/run.sh && nohup sh ./shell-tools/run.sh 1>./shell-tools/logs/run.log 2>./shell-tools/logs/run_err.log &",
-    "retry-linux": "sudo chmod 777 ./shell-tools/retry.sh && nohup sh ./shell-tools/retry.sh 1>./shell-tools/logs/retry.log 2>./shell-tools/logs/retry_err.log &",
+    "run": "sudo chmod 777 ./shell-tools/run.sh && nohup sh ./shell-tools/run.sh 1>./shell-tools/shell-logs/run.log 2>./shell-tools/shell-logs/run_err.log &",
+    "retry-linux": "sudo chmod 777 ./shell-tools/retry.sh && nohup sh ./shell-tools/retry.sh 1>./shell-tools/shell-logs/retry.log 2>./shell-tools/shell-logs/retry_err.log &",
     "install-linux": "npm install --ignore-scripts puppeteer && npm i && cd node_modules/puppeteer && npm run install && npm run install && cd ../..",
     "single-download": "node src/single-download.js",
-    "single-download-sh": "sudo chmod 777 ./shell-tools/single-download.sh && nohup sh ./shell-tools/single-download.sh 1>./shell-tools/logs/single-download.log 2>./shell-tools/logs/single-download_err.log &"
+    "single-download-sh": "sudo chmod 777 ./shell-tools/single-download.sh && nohup sh ./shell-tools/single-download.sh 1>./shell-tools/shell-logs/single-download.log 2>./shell-tools/shell-logs/single-download_err.log &"
   },
   "repository": {
     "type": "git",
