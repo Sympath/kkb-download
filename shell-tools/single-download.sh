@@ -1,6 +1,9 @@
+# 解决相对路径问题 先进入脚本所在的目录，往上一层就是根目录了
+cd $(dirname $0)
+cd '..'
 while read line; do
     eval "$line"
-done <../config/single-download-config
+done <./config/single-download-config
 
 echo "获取到的地址为：${m3u8Url}"
 ffmpeg -i $m3u8Url -c copy -bsf:a aac_adtstoasc ./${filename}.mp4
