@@ -9,7 +9,7 @@ let courseDir = 'output'; // 课程输出目录
 let configDir = 'currentConfig'; // 配置输出目录
 
 function filterName(name) {
-  const reg = /[`()（）\r\n[\]]/gim
+  const reg = /[`【】()（）\r\n[\]]/gim
   name = name.replace(/、/g, '.')
   // 处理空格
   name = name.replace(/ /g, '-')

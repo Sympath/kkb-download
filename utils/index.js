@@ -60,7 +60,7 @@ export function eachObj(obj, cb) {
 }
 // 处理命令的敏感词
 export function filterName(name) {
-  const reg = /[`()（）\r\n[\]]/gim
+  const reg = /[`【】()（）\r\n[\]]/gim
   name = name.replace(/、/g, '.')
   // 处理空格
   name = name.replace(/ /g, '-')
