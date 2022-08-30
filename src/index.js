@@ -22,7 +22,8 @@ import {
   shDir,
   finishCourseTxtPath,
   allShDir,
-  allShFilePath
+  allShFilePath,
+  shellTxtPath
 } from '../config/vari.js';
 import { checkPath, clearDir } from '../utils/node-api.js';
 
@@ -47,6 +48,10 @@ let getMailLog = (bdypDir) => `echo '邮件通知成功：${bdypDir}'`;
 let recordFinishCourse = (courseName, owner, link) => {
   let record = `${courseName}======${owner}======${link}`
   return `echo ${record} >> ${finishCourseTxtPath}`
+}
+// 生成常用命令
+let recordCmd = (cmd) => {
+  return `echo ${cmd} >> ${shellTxtPath}`
 }
 // 处理一些特性实现问题
 polify();

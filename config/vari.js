@@ -5,6 +5,8 @@ export let rootDir = (__dirname || "").replace('/dist', '').replace('/src', '').
 export let shDir = `${rootDir}/sh`
 // 已完成的课程记录
 export let finishCourseTxtPath = `${rootDir}/sh/finishCourse.txt`
+// 常见执行命令的记录
+export let shellTxtPath = `${rootDir}/sh/shellTxt.txt`
 // 批量执行脚本的目录
 export let allShDir = `${shDir}/all`
 // 批量执行脚本的文件
@@ -16,5 +18,6 @@ export default {
     shDir,
     finishCourseTxtPath,
     allShDir,
-    allShFilePath
+    allShFilePath,
+    shellTxtPath
 }
