@@ -141,7 +141,7 @@ async function getFFmpeg() {
                 for (let l = 0; l < contents.length; l++) {
                   const { callback_key: mediaId } = contents[l]
                   // 视频名称
-                  let videoName = `${content_title}--${l < 9 ? 0 : ''}${l + 1}.mp4`
+                  let videoName = filterName(`${content_title}--${l < 9 ? 0 : ''}${l + 1}.mp4`).replace(/\s/g, '')
                   const params = { mediaId, accessToken }
                   try {
                     const { data: videoInfo } = await api.kkb.getMediaInfo(params)

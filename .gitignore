@@ -36,8 +36,7 @@ nohup.out
 *.pdf
 download.sh
 src/index-debug.js
-shell-tools/upload-remote.sh
-shell-tools/upload.sh
+shell-tools/upload*
 # all.sh
 # cookie.txt
 # name.txt
