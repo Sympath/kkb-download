@@ -6,11 +6,9 @@
 
 完成配置：登陆官网，获取 cookies，全局搜索【配置 1】填写 cookies；（如果有多个账号，可以全局搜索【配置 2】填写名称）；
 
-1. 信息生成：执行`npm run formatConfig`；会生成 currentConfig 目录及其下对应配置文件
-2. 执行`npm install`：进行安装依赖
-3. 执行`npm run build1`：触发接口，生成所有 vip 课程的目录结构、静态资源和对应所有课程视频转码 ffepmg 命令
-4. 执行`npm run build2`：收集所有 vip 课程的 ffepmg 命令 txt 文件，生成一个对象，【key 是文件地址；val 是对应的子目录数组】
-5. 执行`npm run build3`：根据命令生成对应的`download.sh`脚本文件，包含所有 ffepmg 命令
+1. 执行`npm install`：进行安装依赖
+2. 信息生成：执行`npm run formatConfig`；会生成 currentConfig 目录及其下对应配置文件
+3. 执行`npm run run`：触发 run 脚本，生成所有 vip 课程的目录结构、静态资源和对应所有课程视频转码 ffepmg 命令
 
 ### 云服务器情况
 
