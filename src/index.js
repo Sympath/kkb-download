@@ -141,7 +141,8 @@ async function getFFmpeg() {
                 for (let l = 0; l < contents.length; l++) {
                   const { callback_key: mediaId } = contents[l]
                   // 视频名称
-                  let videoName = filterName(`${content_title}--${l < 9 ? 0 : ''}${l + 1}.mp4`).replace(/\s/g, '')
+                  let videoName = filterName(`${content_title}--${l < 9 ? 0 : ''}${l + 1}.mp4`)
+                  videoName = videoName.replace(/\s/g, '')
                   const params = { mediaId, accessToken }
                   try {
                     const { data: videoInfo } = await api.kkb.getMediaInfo(params)
@@ -152,13 +153,13 @@ async function getFFmpeg() {
                     // 避免重复的课程记录
                     if (!cacheManage[videoUriWithoutToken]) {
                       cacheManage[videoUriWithoutToken] = true
-                      contentText = `ffmpeg -i ${playURL} -c copy -bsf:a aac_adtstoasc ${videoName}`
+                      contentText = `ffmpeg -i ${playURL} -c copy -bsf:a aac_adtstoasc ${videoName.replace(/\s/g, '')}`
                       // 这里是记录当前收集到的命令
                       tasks.push(contentText)
-                      tasks.push(`echo '${videoName} complete！'`)
-                      let uploadCmd = getBDYPUploadCmd(videoName, `${bypyChapterPath}`)
+                      tasks.push(`echo '${videoName.replace(/\s/g, '')} complete！'`)
+                      let uploadCmd = getBDYPUploadCmd(videoName.replace(/\s/g, ''), `${bypyChapterPath}`)
                       tasks.push(uploadCmd)
-                      tasks.push(`echo '${bdypHost}/${bypyChapterPath} 下的课 ${videoName}  上传完成！✅'`)
+                      tasks.push(`echo '${bdypHost}/${bypyChapterPath} 下的课 ${videoName.replace(/\s/g, '')}  上传完成！✅'`)
                       // 删除资源 
                       let rmCmd = getRmCmd(videoName)
                       tasks.push(rmCmd)
