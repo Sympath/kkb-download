@@ -143,11 +143,11 @@ async function getFFmpeg() {
                   // 视频名称
                   let videoName = filterName(`${content_title}--${l < 9 ? 0 : ''}${l + 1}.mp4`)
                   videoName = videoName.replace(/\s/g, '')
-                  let videoPath = `${shDir}/${key}/` // 视频暂存的地址
+                  let videoPath = `${shDir}/${key}/${videoName}` // 视频暂存的地址
                   const params = { mediaId, accessToken }
                   try {
                     const { data: videoInfo } = await api.kkb.getMediaInfo(params)
-                    console.log(`  请求视频：${videoName} complete！`);
+                    console.log(`  请求视频：${videoPath} complete！`);
                     debugger
                     const { playURL } = videoInfo.mediaMetaInfo.videoGroup[0]
                     let [videoUriWithoutToken] = playURL.split('?MtsHlsUriToken')
