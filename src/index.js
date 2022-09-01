@@ -47,7 +47,7 @@ let getMailLog = (bdypDir) => `echo '邮件通知成功：${bdypDir}'`;
 // 生成已完成的课程记录
 let recordFinishCourse = (courseName, owner, link) => {
   let record = `${courseName}======${owner}======${link}`
-  return `echo ${record} >> ${finishCourseTxtPath}`
+  return `echo "${record}" >> ${finishCourseTxtPath}`
 }
 // 生成常用命令
 let recordCmd = (cmd) => {
