@@ -203,7 +203,7 @@ async function getFFmpeg() {
       tasks.push(getClearLogCmd(courseName))
       tasks.push(getMailCmd(bdypDir, courseName))
       tasks.push(getMailLog(bdypDir))
-      tasks.push(recordFinishCourse(courseName, bdypDir, getBDYPLink(bdypDir, courseName)))
+      tasks.push(recordFinishCourse(courseName, bdypDir, getBDYPLink(bdypDir, courseName), key))
       // 将所有的cmd记录进sh文件
       let {
         shFilePath,
@@ -262,7 +262,7 @@ async function getFFmpeg() {
     let shPaths = []; // sh/config0/index.sh
     sonShellTasks.forEach(shellTask => {
       let { doShellCmd,
-        key
+        key // 文件夹名
       } = shellTask;
       doShellCmds.push(doShellCmd);
       configDirs.push(key)
