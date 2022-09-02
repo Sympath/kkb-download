@@ -35,7 +35,7 @@ nohup.out
 *.mp4
 *.pdf
 download.sh
-src/index-debug.js
+src/index-debug*.js
 shell-tools/upload*
 # all.sh
 # cookie.txt

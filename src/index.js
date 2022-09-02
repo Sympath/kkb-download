@@ -1,3 +1,5 @@
+import * as configs from '../config/index.js';
+// import * as configs from './index-debug-config.js';  // 用于debug
 // 第四版：采用先下载静态资源，上传到云端；然后再直接将本地视频上传到云端 ====== 以课程为维度进行静态资源上传
 import * as fs from 'fs'
 import {
@@ -5,7 +7,6 @@ import {
   doShellCmd
 } from '../utils/node-api.js';
 import * as api from './api/index.js';
-import * as configs from '../config/index.js';
 import { bdypDir } from '../config/cjs-index.js'
 import {
   filterName
@@ -23,7 +24,8 @@ import {
   finishCourseTxtPath,
   allShDir,
   allShFilePath,
-  shellTxtPath
+  shellTxtPath,
+  serverRepo
 } from '../config/vari.js';
 import { checkPath, clearDir } from '../utils/node-api.js';
 
@@ -50,8 +52,8 @@ let recordFinishCourse = (courseName, owner, link, configName) => {
   return `echo "${record}" >> ${finishCourseTxtPath}`
 }
 // 记录常见命令
-let recordCommonCmd = (cmd, cmd) => {
-  let record = `${cmd}======${cmd}`
+let recordCommonCmd = (cmd, annotation) => {
+  let record = `${cmd}======${annotation}`
   return `echo "${record}" >> ${shellTxtPath}`
 }
 // 处理一些特性实现问题
@@ -68,15 +70,18 @@ async function getFFmpeg() {
   let configArrs = Object.entries(configs.default)
   let currentConfigArrs = configArrs
   console.log('开始下载');
+  debugger
   let shellTasks = [];// 每个shellTasks都有一些信息 如杀死进程的命令、删除对应文件的命令
-  try {
-    await doShellCmd(getBDYPDirCmd(bdypDir))
-  } catch (error) {
-    console.log('创建百度云盘文件夹失败，失败原因：', error);
-  }
+  // try {
+  //   await doShellCmd(getBDYPDirCmd(bdypDir))
+  // } catch (error) {
+  //   console.log('创建百度云盘文件夹失败，失败原因：', error);
+  // }
+  debugger
   for (let index = 0; index < currentConfigArrs.length; index++) {
     let tasks = [];
     const [key, configInfo] = currentConfigArrs[index];
+    debugger
     const {
       basePath,
       courseName,
@@ -148,7 +153,6 @@ async function getFFmpeg() {
                   try {
                     const { data: videoInfo } = await api.kkb.getMediaInfo(params)
                     console.log(`  请求视频：${videoPath} complete！`);
-                    debugger
                     const { playURL } = videoInfo.mediaMetaInfo.videoGroup[0]
                     let [videoUriWithoutToken] = playURL.split('?MtsHlsUriToken')
                     // 避免重复的课程记录
@@ -224,8 +228,7 @@ async function getFFmpeg() {
       let delConfigsCmd = `# rm -rf ${shFilePath}`
       // 中止对应的执行
       let killAllSonShCmd = `# ps -ef | grep ${bdypDir}/repo/sh/${key} | grep -v grep | awk '{print $2}' | xargs kill -9`
-      shellTasks.push(doShellCmd)
-      shellTaskInfos.push({
+      shellTasks.push({
         shFilePath,
         logPath,
         errLogPath,
@@ -269,7 +272,7 @@ async function getFFmpeg() {
       shPaths.push(`sh/${key}/index.sh`)
     })
     // 删除所有对应的配置文件
-    delConfigsCmd = `# cd ${shDir} && rm -rf ${configs.join(' ')}`
+    delConfigsCmd = `# cd ${shDir} && rm -rf ${configDirs.join(' ')}`
     // 中止对应执行进程
     killAllSonShCmd = `# ps -ef | grep -E '${shPaths.join('|')}' | grep -v grep | awk '{print $2}' | xargs kill -9`
     // sh保存的路径

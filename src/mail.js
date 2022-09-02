@@ -16,10 +16,8 @@ let transporter = nodemailer.createTransport({
 let mailOptions = {
   from: "3101885298@qq.com 王志远", // 邮件中的【发件人】栏信息
   to: "3101885298@qq.com", // 收件人
-  subject: "开课吧下载工具", // 邮件标题
-  html: `<h1>${userName}的课程下载成功啦</h1>
-  分享课程访问地址：${userLink}
-  `, // 内容
+  subject: `开课吧下载工具-${userName}的课程下载成功啦`, // 邮件标题
+  html: `<h1>课程名：${courseName}</h1>分享课程访问地址：${userLink}`, // 内容
 };
 
 transporter.sendMail(mailOptions, (err, info) => {
