@@ -45,13 +45,14 @@ let getClearLogCmd = (courseDir) => `echo '之前日志情清空,上个完成课
 let getMailCmd = (bdypDir, courseName) => `node src/mail.js --name=${bdypDir} --courseName=${courseName}`;
 let getMailLog = (bdypDir) => `echo '邮件通知成功：${bdypDir}'`;
 // 生成已完成的课程记录
-let recordFinishCourse = (courseName, owner, link) => {
-  let record = `${courseName}======${owner}======${link}`
+let recordFinishCourse = (courseName, owner, link, configName) => {
+  let record = `${courseName}======${owner}======${link}=====${configName}`
   return `echo "${record}" >> ${finishCourseTxtPath}`
 }
-// 生成常用命令
-let recordCmd = (cmd) => {
-  return `echo ${cmd} >> ${shellTxtPath}`
+// 记录常见命令
+let recordCommonCmd = (cmd, cmd) => {
+  let record = `${cmd}======${cmd}`
+  return `echo "${record}" >> ${shellTxtPath}`
 }
 // 处理一些特性实现问题
 polify();
@@ -66,9 +67,8 @@ async function getFFmpeg() {
   };
   let configArrs = Object.entries(configs.default)
   let currentConfigArrs = configArrs
-
   console.log('开始下载');
-  let shellTasks = [];
+  let shellTasks = [];// 每个shellTasks都有一些信息 如杀死进程的命令、删除对应文件的命令
   try {
     await doShellCmd(getBDYPDirCmd(bdypDir))
   } catch (error) {
@@ -220,7 +220,20 @@ async function getFFmpeg() {
       console.log(`sh脚本生成完成 ${shFilePath}`);
       // 考虑空间问题，不能同时执行了，先收集
       let doShellCmd = `nohup sh ${shFilePath} 1>${logPath} 2>${errLogPath} &`
+      // 删除对应的配置文件
+      let delConfigsCmd = `# rm -rf ${shFilePath}`
+      // 中止对应的执行
+      let killAllSonShCmd = `# ps -ef | grep ${bdypDir}/repo/sh/${key} | grep -v grep | awk '{print $2}' | xargs kill -9`
       shellTasks.push(doShellCmd)
+      shellTaskInfos.push({
+        shFilePath,
+        logPath,
+        errLogPath,
+        key,
+        doShellCmd,
+        delConfigsCmd,
+        killAllSonShCmd
+      })
       // 放在最末尾，并注释
       fs.writeFileSync(shFilePath, `# ${doShellCmd}\n`, { flag: 'a+' })
       // await doShellCmd(doShellCmd)
@@ -231,8 +244,8 @@ async function getFFmpeg() {
   console.log('执行脚本 先保存到', allShFilePath);
   // 杀死当前用户所有执行脚本的命令
   let killAllShCmd = `ps -ef | grep ${bdypDir}/repo/sh/config | grep -v grep | awk '{print $2}' | xargs kill -9`
-  shellTasks.unshift(`# ${killAllShCmd}\n`)
-  shellTasks.unshift(`${recordFinishCourse('课程名称', '拥有者', '访问链接')}\n`)
+  doShellCmd(recordCommonCmd(killAllShCmd, '杀死当前用户所有执行脚本的命令'))
+  doShellCmd(recordFinishCourse('课程名称', '拥有者', '访问链接', '对应配置'))
   // 这里需要控制一下多进程下载，对任务进行拆分
   function groupingArray(data, num) {
     let result = [];
@@ -242,17 +255,36 @@ async function getFFmpeg() {
     return result;
   }
   groupingArray(shellTasks, 10).forEach((sonShellTasks, index) => {
+    let doShellCmds = [];
+    let delConfigsCmd = ''
+    let killAllSonShCmd = ''
+    let configDirs = [];
+    let shPaths = []; // sh/config0/index.sh
+    sonShellTasks.forEach(shellTask => {
+      let { doShellCmd,
+        key
+      } = shellTask;
+      doShellCmds.push(doShellCmd);
+      configDirs.push(key)
+      shPaths.push(`sh/${key}/index.sh`)
+    })
+    // 删除所有对应的配置文件
+    delConfigsCmd = `# cd ${shDir} && rm -rf ${configs.join(' ')}`
+    // 中止对应执行进程
+    killAllSonShCmd = `# ps -ef | grep -E '${shPaths.join('|')}' | grep -v grep | awk '{print $2}' | xargs kill -9`
     // sh保存的路径
     let shFileName = `${allShDir}/${index}.all.sh`
     // 执行完成后就改下名字，免得无法分辨
-    let shBackFileName = `${allShDir}/all${index}-back.sh`
+    let shBackFileName = `${allShDir}/${index}-all-back.sh`
     let renameCmd = `mv ${shFileName} ${shBackFileName}\n`
-    sonShellTasks.push(renameCmd)
+
+    let otherCmds = [renameCmd, delConfigsCmd, killAllSonShCmd];
+    doShellCmds.push(...otherCmds)
     // 将第一个执行的任务存放在all.sh中
     if (index === 0) {
-      fs.writeFileSync(allShFilePath, `${sonShellTasks.join('\n')}\n`)
+      fs.writeFileSync(allShFilePath, `${doShellCmds.join('\n')}\n`)
     }
-    fs.writeFileSync(shFileName, `${sonShellTasks.join('\n')}\n`)
+    fs.writeFileSync(shFileName, `${doShellCmds.join('\n')}\n`)
   })
   // 授予可执行权限
   await doShellCmd(`chmod 777 ${shDir}`)
