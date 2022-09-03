@@ -47,8 +47,8 @@ let getClearLogCmd = (courseDir) => `echo '之前日志情清空,上个完成课
 let getMailCmd = (bdypDir, courseName) => `node src/mail.js --name=${bdypDir} --courseName=${courseName}`;
 let getMailLog = (bdypDir) => `echo '邮件通知成功：${bdypDir}'`;
 // 生成已完成的课程记录
-let recordFinishCourse = (courseName, owner, link, configName) => {
-  let record = `${courseName}======${owner}======${link}=====${configName}`
+let recordFinishCourse = (courseName, owner, configName, link) => {
+  let record = `${courseName}======${owner}=====${configName}====${link}`
   return `echo "${record}" >> ${finishCourseTxtPath}`
 }
 // 记录常见命令
@@ -207,7 +207,7 @@ async function getFFmpeg() {
       tasks.push(getClearLogCmd(courseName))
       tasks.push(getMailCmd(bdypDir, courseName))
       tasks.push(getMailLog(bdypDir))
-      tasks.push(recordFinishCourse(courseName, bdypDir, getBDYPLink(bdypDir, courseName), key))
+      tasks.push(recordFinishCourse(courseName, bdypDir, key, getBDYPLink(bdypDir, courseName)))
       // 将所有的cmd记录进sh文件
       let {
         shFilePath,
