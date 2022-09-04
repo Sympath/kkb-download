@@ -28,7 +28,7 @@ if (typeof courseIds === 'string') {
     noNeedFilter = true;
   } else {
     // 111,222
-    courseIds = courseIds.split(',').map(i => Number(i))
+    courseIds = courseIds.split(',').filter(item => item).map(i => Number(i))
     console.log(courseIds);
   };
 };
