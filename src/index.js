@@ -7,7 +7,7 @@ import {
   doShellCmd
 } from '../utils/node-api.js';
 import * as api from './api/index.js';
-import { bdypDir } from '../config/cjs-index.js'
+import { bdypDir, downType } from '../config/cjs-index.js'
 import {
   filterName
 } from '../utils/index.js';
@@ -55,6 +55,10 @@ let recordFinishCourse = (courseName, owner, configName, link) => {
 let recordCommonCmd = (cmd, annotation) => {
   let record = `${cmd}======${annotation}`
   return `echo "${record}" >> ${shellTxtPath}`
+}
+let isDownCourseIds = false;
+if (downType === 'down-courseIds') {
+  isDownCourseIds = true
 }
 // 处理一些特性实现问题
 polify();
