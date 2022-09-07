@@ -6,7 +6,8 @@ const {
     courseName, // 视频名称
     bypyFullDir, // 云盘地址
     bypyDir, // 用户名
-} = require('../config/single-download.js');
+} = require('../single-download.config.js');
+debugger
 const { doShellCmd } = require("../utils/cjs/node-api-cjs.js");
 const { filterName } = require("../utils/cjs/index.js");
 const m3u8ToMp4 = require("./m3u8ToMp4.js"); // 引入核心模块，注意路径

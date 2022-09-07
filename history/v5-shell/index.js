@@ -81,8 +81,11 @@ async function getFFmpeg() {
   // } catch (error) {
   //   console.log('创建百度云盘文件夹失败，失败原因：', error);
   // }
+  debugger
   for (let index = 0; index < currentConfigArrs.length; index++) {
+    let tasks = [];
     const [key, configInfo] = currentConfigArrs[index];
+    debugger
     const {
       basePath,
       courseName,
@@ -161,19 +164,19 @@ async function getFFmpeg() {
                       cacheManage[videoUriWithoutToken] = true
                       contentText = `ffmpeg -i ${playURL} -c copy -bsf:a aac_adtstoasc ${videoPath.replace(/\s/g, '')}`
                       // 这里是记录当前收集到的命令
-                      await doShellCmd(contentText)
-                      await doShellCmd(`echo '${videoName.replace(/\s/g, '')} complete！'`)
+                      tasks.push(contentText)
+                      tasks.push(`echo '${videoName.replace(/\s/g, '')} complete！'`)
                       let uploadCmd = getBDYPUploadCmd(videoPath.replace(/\s/g, ''), `${bypyChapterPath}`)
-                      await doShellCmd(uploadCmd)
-                      await doShellCmd(`echo '${bdypHost}/${bypyChapterPath} 下的课 ${videoName.replace(/\s/g, '')}  上传完成！✅'`)
+                      tasks.push(uploadCmd)
+                      tasks.push(`echo '${bdypHost}/${bypyChapterPath} 下的课 ${videoName.replace(/\s/g, '')}  上传完成！✅'`)
                       // 删除资源 
                       let rmCmd = getRmCmd(videoPath)
-                      await doShellCmd(rmCmd)
-                      await doShellCmd(`echo '删除课${videoName}完成！✅'`)
+                      tasks.push(rmCmd)
+                      tasks.push(`echo '删除课${videoName}完成！✅'`)
                     }
                   } catch (error) {
-                    await doShellCmd(`echo '视频资源${mediaId}'`)
-                    console.error(`视频资源${mediaId}请求失败，${JSON.stringify(error)}`);
+                    tasks.push(`echo '视频资源${mediaId}'`)
+                    console.error(`视频资源${mediaId}请求失败，${error}`);
                   }
                 }
               }
@@ -186,6 +189,7 @@ async function getFFmpeg() {
                     await api.kkb.getStaticFile(url, file)
                   } catch (error) {
                     console.error(`课件${file}下载失败，失败原因 ${error}`);
+                    tasks.push(`echo '课件${file}下载失败，失败原因 ${error}'`)
                   }
                 }
               }
@@ -202,11 +206,12 @@ async function getFFmpeg() {
       console.error(`课程${course_id}接口请求失败，失败原因${error}`);
     }
     console.log(`${courseName} 课程内视频收集完成`);
+    tasks.push(`echo '${courseName} 课程内视频收集完成'`)
     try {
       tasks.push(getClearLogCmd(courseName))
-      await doShellCmd(getMailCmd(bdypDir, courseName))
-      await doShellCmd(getMailLog(bdypDir))
-      await doShellCmd(recordFinishCourse(courseName, bdypDir, key, getBDYPLink(bdypDir, courseName)))
+      tasks.push(getMailCmd(bdypDir, courseName))
+      tasks.push(getMailLog(bdypDir))
+      tasks.push(recordFinishCourse(courseName, bdypDir, key, getBDYPLink(bdypDir, courseName)))
       // 将所有的cmd记录进sh文件
       let {
         shFilePath,

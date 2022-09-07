@@ -22,6 +22,7 @@ let getDetailPageUrl = courseId => `https://learn.kaikeba.com/catalog/${courseId
 const cookies = cjsConfig.cookies;
 let courseIds = cjsConfig.courseIds; // 需要下载的课程
 let noNeedFilter = false; //是否下载全部课程
+let userCourseIds = [] // 用户所有的课程id
 // 如果是字符串就进行处理一下
 if (typeof courseIds === 'string') {
   if (courseIds === '*') {
@@ -44,7 +45,7 @@ if (typeof courseIds === 'string') {
     await nodeUtil.clearDir(`./${courseDir}`)
     let page = await puppeteerUtils.getPage({
       ignoreHTTPSErrors: true,
-      headless: true,
+      headless: false,
       devtools: true,
       args: ["--no-sandbox", "--disable-setuid-sandbox", "--disable-extensions"]
     });
@@ -56,6 +57,8 @@ if (typeof courseIds === 'string') {
       let {
         Authorization,
       } = commonInfo;
+      // 保存下课程信息
+      nodeUtil.doShellCmd(`echo '${course_id}====${course_name}' >> userCourseInfo.txt`)
       // 5. 写入文件
       let content = `
     export const course_id = '${course_id}';// ${course_name}
