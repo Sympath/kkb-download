@@ -36,7 +36,7 @@ if (typeof courseIds === 'string') {
 };
 
 (async function () {
-  let url = "https://admin.xiaoe-tech.com/muti_index?type=wx#/myParticipate";
+  let url = "https://appqszhpsdw5896.h5.xiaoeknow.com/p/course/column/p_62e393cce4b0c9426480ca4e?l_program=xe_know_pc";
   let over = ''; // 所有任务是否完成
   let completeConfigNum = 0; // 完成的任务数
   try {
@@ -75,7 +75,8 @@ if (typeof courseIds === 'string') {
     });
     // const ps = await browser.pages();
     // await ps[0].close();
-    await puppeteerUtils.addCookies(page, cookies, domainUtil.getHostName(url)); //云盘域名
+    await puppeteerUtils.addCookies(page, cookies, 'appqszhpsdw5896.h5.xiaoeknow.com'); //云盘域名
+    await puppeteerUtils.addCookies(page, cookies, '.qq.com'); //云盘域名
     await page.setViewport({
       //修改浏览器视窗大小
       width: 1920,

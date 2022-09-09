@@ -18,6 +18,7 @@ module.exports = {
   entry: {
     // formatConfig: "./src/formatConfig.js",
     main: "./src/index.js",
+    "courseware-down": "./src/courseware-down.js", // 下载课件
     // getFilesArr: './src/getFilesArr_1.js',
     // shDownLoad: './src/shDownLoad_1.js',
     // delete: './src/delete.js',
